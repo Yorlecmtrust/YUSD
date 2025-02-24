@@ -4,7 +4,7 @@ import requests
 # FastAPI backend URL
 BASE_URL = "http://127.0.0.1:8000"  # Change if deployed
 
-st.title("USD to USDT Transfer")
+st.title("YORLCM EXPRESS TRUST")
 
 # User input for amount
 usd_amount = st.number_input("Enter USD amount:", min_value=1, step=1)
