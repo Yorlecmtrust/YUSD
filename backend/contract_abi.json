@@ -1,0 +1,60 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+
+contract LoandiskWithdrawal is ReentrancyGuard {
+    address public owner;
+    address public userWallet;
+    IERC20 public usdtTokenContract;
+    AggregatorV3Interface internal priceFeed;
+
+    event FundsWithdrawnFromLoandisk(uint256 usdAmount);
+    event UsdtTransferred(uint256 usdtAmount);
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not authorized");
+        _;
+    }
+
+    constructor(
+        address _userWallet,
+        address _usdtTokenAddress,
+        address _priceFeedAddress
+    ) {
+        owner = msg.sender;
+        userWallet = _userWallet;
+        usdtTokenContract = IERC20(_usdtTokenAddress);
+        priceFeed = AggregatorV3Interface(_priceFeedAddress);
+    }
+
+    // Process withdrawal from Loandisk and convert USD to USDT
+    function processWithdrawal(uint256 usdAmount) external onlyOwner nonReentrant {
+        // Step 1: Emit event for backend to trigger Loandisk withdrawal
+        emit FundsWithdrawnFromLoandisk(usdAmount);
+
+        // Step 2: Fetch exchange rate from Chainlink oracle and calculate USDT amount
+        uint256 usdtAmount = getUsdtFromUsd(usdAmount);
+
+        // Step 3: Transfer USDT to the user wallet
+        bool success = usdtTokenContract.transfer(userWallet, usdtAmount);
+        require(success, "USDT transfer failed");
+
+        emit UsdtTransferred(usdtAmount);
+    }
+
+    // Get the USD to USDT conversion rate from Chainlink.
+    // Note: USDT has 6 decimals and the price feed return 8 decimals
+    // for 1 USD, we want 1e6 USDT unit.
+    // Conersion formula: usdAmount =  (usdAmount * 1e14) / price.
+    function getUsdtFromUsd(uint256 usdAmount) public view returns (uint256) {
+        (, int256 price, , , ) = priceFeed.latestRoundData();
+        require(price > 0, "Invalid price data");
+        return (usdAmount * 1e14) / uint256(price);
+    }
+
+    // Allow the contract to receive Ether (if needed for funding)
+    receive() external payable {}
+}

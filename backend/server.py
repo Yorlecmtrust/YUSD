@@ -14,7 +14,8 @@ app = FastAPI()
 web3 = Web3(Web3.HTTPProvider(os.getenv("INFURA_API_URL")))
 
 # Load Contract ABI
-with open("backend/contract_abi.json", "r") as f:
+abi_path = os.path.join(os.path.dirname(__file__), "contract_abi.json")
+with open(abi_path, "r") as f:
     contract_abi = json.load(f)
 
 # Deployed Contract Address
