@@ -3,46 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>YUSD Dashboard</title>
+  <title>Yorlecm YUSD Dashboard</title>
   <link rel="stylesheet" href="style.css" />
-  <script defer src="script.js"></script>
 </head>
 <body>
-  <div class="login-container" id="loginPage">
-    <img src="YT_Logo.png" alt="Logo" class="logo" />
-    <h2>Login</h2>
-    <form id="loginForm">
+  <div class="container">
+    <div class="login-panel" id="loginPanel">
+      <div class="logo">YT</div>
+      <h2>Decentralized Financial Institution</h2>
+      <h3>Login to YUSD Dashboard</h3>
       <input type="email" id="email" placeholder="Email" required />
       <input type="password" id="phone" placeholder="Phone Number" required />
-      <button type="submit">Login</button>
-    </form>
-  </div>
+      <button onclick="login()">LOGIN</button>
+    </div>
 
-  <div id="dashboard" class="dashboard-container hidden">
-    <nav>
-      <a href="#">Dashboard</a>
-      <a href="#">Wallets</a>
-      <a href="#">Transactions</a>
-    </nav>
-    <div class="container">
-      <h1>Welcome to YUSD Dashboard</h1>
-      <div class="clock" id="clock"></div>
-      <p><strong>LoanDisk Savings Balance:</strong> $<span id="loandiskBalance">0.00</span></p>
-      <p><strong>YUSD Price:</strong> <span id="priceUSD">$1.00</span></p>
+    <div class="dashboard" id="dashboard" style="display:none;">
+      <div class="header">
+        <h2>Dashboard</h2>
+      </div>
 
-      <form id="transactionForm">
-        <input type="text" id="wallet" placeholder="Recipient Wallet Address" required />
-        <input type="number" id="amount" placeholder="USD Amount" required />
-        <button type="submit">Mint YUSD</button>
-      </form>
+      <div class="stats">
+        <div class="card">
+          <h4>YET Balance</h4>
+          <p id="yetBalance">$—</p>
+          <span>YET Savings Balance</span>
+        </div>
+        <div class="card">
+          <h4>YUSD Price</h4>
+          <p>$1.00</p>
+          <span>Stable 1:1 Backed</span>
+        </div>
+        <div class="card">
+          <h4>Total Minted</h4>
+          <p id="totalMinted">$—</p>
+          <span>Live Supply</span>
+        </div>
+      </div>
 
-      <div id="status" class="hidden">
-        <p><strong>Status:</strong> <span id="result"></span></p>
-        <button id="anotherBtn">Make Another Transaction</button>
-        <button id="logoutBtn">Logout</button>
+      <div class="mint-section">
+        <h3>Mint YUSD</h3>
+        <input type="text" id="walletAddress" placeholder="Wallet Address" />
+        <input type="number" id="usdAmount" placeholder="USD Amount" />
+        <button onclick="mintYUSD()">Mint YUSD</button>
+        <div id="mintStatus" class="status"></div>
       </div>
     </div>
   </div>
+  <script src="script.js"></script>
 </body>
 </html>
-"""
