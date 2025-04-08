@@ -2,69 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>YUSD Dashboard</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/png" href="YT_Logo_64x64.png">
+  <link rel="stylesheet" href="style.css" />
   <script defer src="script.js"></script>
 </head>
 <body>
-
-  <!-- LOGIN PAGE -->
-  <div id="loginPage">
-    <div class="center">
-      <img src="YT_Logo_200x200.png" alt="YT Logo" class="logo"/>
-      <h1>Login to YUSD Dashboard</h1>
-      <form id="loginForm">
-        <input type="email" id="email" placeholder="Email" required />
-        <input type="password" id="phone" placeholder="Password (Phone Number)" required />
-        <button type="submit">Login</button>
-      </form>
-    </div>
+  <div class="login-container" id="loginPage">
+    <img src="YT_Logo.png" alt="Logo" class="logo" />
+    <h2>Login</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="phone" placeholder="Phone Number" required />
+      <button type="submit">Login</button>
+    </form>
   </div>
 
-  <!-- DASHBOARD -->
-  <div id="dashboardPage" style="display: none;">
+  <div id="dashboard" class="dashboard-container hidden">
     <nav>
       <a href="#">Dashboard</a>
       <a href="#">Wallets</a>
       <a href="#">Transactions</a>
     </nav>
-
     <div class="container">
-      <h2>Welcome to the YUSD Dashboard</h2>
-      <div class="stat-grid">
-        <div class="card">
-          <h3>LoanDisk Balance</h3>
-          <p id="loandiskBalance">$0.00</p>
-        </div>
-        <div class="card">
-          <h3>YUSD Price</h3>
-          <p id="priceUSD">$1.00</p>
-        </div>
-        <div class="card">
-          <h3>Total Minted</h3>
-          <p id="mintedAmount">—</p>
-        </div>
-      </div>
+      <h1>Welcome to YUSD Dashboard</h1>
+      <div class="clock" id="clock"></div>
+      <p><strong>LoanDisk Savings Balance:</strong> $<span id="loandiskBalance">0.00</span></p>
+      <p><strong>YUSD Price:</strong> <span id="priceUSD">$1.00</span></p>
 
-      <div class="card">
-        <h3>Mint YUSD</h3>
-        <form id="mintForm">
-          <input type="text" id="wallet" placeholder="Wallet Address" required />
-          <input type="number" id="amount" placeholder="USD Amount" required />
-          <button type="submit">Mint YUSD</button>
-        </form>
-      </div>
+      <form id="transactionForm">
+        <input type="text" id="wallet" placeholder="Recipient Wallet Address" required />
+        <input type="number" id="amount" placeholder="USD Amount" required />
+        <button type="submit">Mint YUSD</button>
+      </form>
 
-      <div class="card" id="transactionStatus" style="display:none;">
-        <h3>Status</h3>
-        <p id="statusMessage"></p>
+      <div id="status" class="hidden">
+        <p><strong>Status:</strong> <span id="result"></span></p>
         <button id="anotherBtn">Make Another Transaction</button>
         <button id="logoutBtn">Logout</button>
       </div>
     </div>
   </div>
-
 </body>
 </html>
+"""
