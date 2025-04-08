@@ -13,25 +13,33 @@ function login() {
 }
 
 function fetchYETBalance() {
-  fetch('/get-balance')
-    .then(response => response.json())
+  fetch('http://localhost:8000/get-loandisk-balance')
+    .then(response => {
+      if (!response.ok) throw new Error(`Status ${response.status}`);
+      return response.json();
+    })
     .then(data => {
+      console.log("✅ LoanDisk balance fetched:", data);
       document.getElementById('yetBalance').textContent = `$${parseFloat(data.balance).toFixed(2)}`;
     })
     .catch(err => {
-      console.error('Error fetching balance:', err);
+      console.error('❌ Error fetching LoanDisk balance:', err);
       document.getElementById('yetBalance').textContent = '$—';
     });
 }
 
 function fetchTotalMinted() {
-  fetch('/get-total-minted')
-    .then(response => response.json())
+  fetch('http://localhost:8000/get-total-minted')
+    .then(response => {
+      if (!response.ok) throw new Error(`Status ${response.status}`);
+      return response.json();
+    })
     .then(data => {
+      console.log("✅ Total minted fetched:", data);
       document.getElementById('totalMinted').textContent = `$${parseFloat(data.total).toFixed(2)}`;
     })
     .catch(err => {
-      console.error('Error fetching total minted:', err);
+      console.error('❌ Error fetching total minted:', err);
       document.getElementById('totalMinted').textContent = '$—';
     });
 }
@@ -48,25 +56,25 @@ function mintYUSD() {
 
   status.textContent = 'Processing...';
 
-  fetch('/transfer/', {
+  fetch('http://localhost:8000/send-stablecoin', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       to_address: wallet,
-      amount_usd: parseFloat(amount)
+      usd_amount: parseFloat(amount)
     })
   })
     .then(res => res.json())
     .then(res => {
       if (res.status === 'success') {
-        status.textContent = `Success! ${res.amount_usdt.toFixed(2)} YUSD sent to ${wallet}`;
+        status.textContent = `✅ Success! ${res.usd_amount.toFixed(2)} YUSD minted to ${wallet}`;
         fetchTotalMinted();
       } else {
-        status.textContent = `Error: ${res.detail || 'Unknown error'}`;
+        status.textContent = `❌ Error: ${res.detail || 'Unknown error'}`;
       }
     })
     .catch(err => {
-      console.error('Minting error:', err);
+      console.error('❌ Minting error:', err);
       status.textContent = 'Failed to mint YUSD.';
     });
 }
