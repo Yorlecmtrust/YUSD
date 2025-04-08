@@ -1,69 +1,101 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Inter', sans-serif;
-  background-color: #0c0c0c;
-  color: #fff;
-}
-
-.login-container, .dashboard-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-}
-
-.logo {
-  width: 120px;
-  margin-bottom: 20px;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-}
-
-input, button {
-  padding: 10px;
-  margin: 8px 0;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-}
-
-button {
-  background-color: #00ffc6;
-  color: #000;
-  font-weight: bold;
-}
-
-button:hover {
-  background-color: #00dab4;
-}
-
-nav {
-  width: 100%;
-  background: #1a1a1a;
-  padding: 10px 0;
-  display: flex;
-  justify-content: space-around;
-}
-
-nav a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 18px;
-}
-
-nav a:hover {
-  text-decoration: underline;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #0d1117;
+  color: #c9d1d9;
 }
 
 .container {
-  padding: 20px;
+  display: flex;
+  height: 100vh;
 }
 
-.hidden {
-  display: none;
+.login-panel, .dashboard {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-panel {
+  background-color: #161b22;
+  border-right: 1px solid #30363d;
+}
+
+.login-panel .logo {
+  font-size: 48px;
+  font-weight: bold;
+  color: #58a6ff;
+  margin-bottom: 20px;
+}
+
+.login-panel input, .mint-section input {
+  width: 250px;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+}
+
+.login-panel button, .mint-section button {
+  background-color: #238636;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.dashboard .header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  width: 100%;
+}
+
+.card {
+  background-color: #21262d;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  width: 30%;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+}
+
+.card h4 {
+  color: #58a6ff;
+  margin-bottom: 10px;
+}
+
+.card p {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.mint-section {
+  margin-top: 30px;
+  background-color: #161b22;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+.status {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #3fb950;
 }
