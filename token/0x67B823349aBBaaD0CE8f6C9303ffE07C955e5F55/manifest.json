@@ -1,0 +1,11 @@
+{
+  "name": "YET Dollar (YUSD)",
+  "symbol": "YUSD",
+  "decimals": 18,
+  "description": "The self-funded YUSD stablecoin backed 1:1 with USD via LoanDisk withdrawals.",
+  "website": "https://ugetityet.com",
+  "twitter": "",
+  "telegram": "",
+  "github": "https://github.com/Yorlecm",
+  "logoURI": "https://raw.githubusercontent.com/Yorlecm/<your-yusd-repo>/main/token/0x67B823349aBBaaD0CE8f6C9303ffE07C955e5F55/logo.png"
+}
