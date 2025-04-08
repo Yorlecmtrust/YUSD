@@ -1,80 +1,72 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById("loginForm");
-  const dashboard = document.getElementById("dashboard");
-  const loginPage = document.getElementById("loginPage");
+function login() {
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
 
-  if (loginForm) {
-    loginForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      localStorage.setItem("loggedIn", "true");
-      loginPage.classList.add("hidden");
-      dashboard.classList.remove("hidden");
+  if (email && phone) {
+    document.getElementById('loginPanel').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    fetchYETBalance();
+    fetchTotalMinted();
+  } else {
+    alert('Enter both email and phone number.');
+  }
+}
+
+function fetchYETBalance() {
+  fetch('/get-balance')
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('yetBalance').textContent = `$${parseFloat(data.balance).toFixed(2)}`;
+    })
+    .catch(err => {
+      console.error('Error fetching balance:', err);
+      document.getElementById('yetBalance').textContent = '$—';
     });
-  }
+}
 
-  const logoutBtn = document.getElementById("logoutBtn");
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("loggedIn");
-      location.reload();
+function fetchTotalMinted() {
+  fetch('/get-total-minted')
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('totalMinted').textContent = `$${parseFloat(data.total).toFixed(2)}`;
+    })
+    .catch(err => {
+      console.error('Error fetching total minted:', err);
+      document.getElementById('totalMinted').textContent = '$—';
     });
+}
+
+function mintYUSD() {
+  const wallet = document.getElementById('walletAddress').value;
+  const amount = document.getElementById('usdAmount').value;
+  const status = document.getElementById('mintStatus');
+
+  if (!wallet || !amount) {
+    status.textContent = 'Please enter wallet and amount.';
+    return;
   }
 
-  const makeAnotherBtn = document.getElementById("anotherBtn");
-  if (makeAnotherBtn) {
-    makeAnotherBtn.addEventListener("click", () => {
-      document.getElementById("transactionForm").reset();
-      document.getElementById("status").classList.add("hidden");
-    });
-  }
+  status.textContent = 'Processing...';
 
-  const priceElement = document.getElementById("priceUSD");
-  if (priceElement) {
-    fetch("http://localhost:8000/get-price")
-      .then(res => res.json())
-      .then(data => priceElement.textContent = `$${data.price_usd.toFixed(2)}`)
-      .catch(() => priceElement.textContent = "Unavailable");
-  }
-
-  const loandiskElement = document.getElementById("loandiskBalance");
-  if (loandiskElement) {
-    fetch("http://localhost:8000/get-loandisk-balance")
-      .then(res => res.json())
-      .then(data => loandiskElement.textContent = `$${data.balance.toFixed(2)}`)
-      .catch(() => loandiskElement.textContent = "$0.00");
-  }
-
-  const form = document.getElementById("transactionForm");
-  if (form) {
-    form.addEventListener("submit", async function (e) {
-      e.preventDefault();
-      const to_address = document.getElementById("wallet").value;
-      const usd_amount = document.getElementById("amount").value;
-
-      const payload = { to_address, usd_amount: parseFloat(usd_amount) };
-      try {
-        const res = await fetch("http://localhost:8000/send-stablecoin", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        const data = await res.json();
-        if (res.ok) {
-          document.getElementById("result").textContent = `✅ Minted ${usd_amount} YUSD to ${to_address}`;
-        } else {
-          document.getElementById("result").textContent = `❌ ${data.detail}`;
-        }
-        document.getElementById("status").classList.remove("hidden");
-      } catch (err) {
-        document.getElementById("result").textContent = `❌ ${err.message}`;
-        document.getElementById("status").classList.remove("hidden");
+  fetch('/transfer/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      to_address: wallet,
+      amount_usd: parseFloat(amount)
+    })
+  })
+    .then(res => res.json())
+    .then(res => {
+      if (res.status === 'success') {
+        status.textContent = `Success! ${res.amount_usdt.toFixed(2)} YUSD sent to ${wallet}`;
+        fetchTotalMinted();
+      } else {
+        status.textContent = `Error: ${res.detail || 'Unknown error'}`;
       }
+    })
+    .catch(err => {
+      console.error('Minting error:', err);
+      status.textContent = 'Failed to mint YUSD.';
     });
-  }
-
-  setInterval(() => {
-    const now = new Date();
-    const clock = document.getElementById("clock");
-    if (clock) clock.textContent = now.toLocaleTimeString();
-  }, 1000);
-});
+}
