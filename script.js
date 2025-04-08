@@ -3,12 +3,25 @@ function login() {
   const phone = document.getElementById('phone').value;
 
   if (email && phone) {
-    document.getElementById('loginPanel').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-    fetchYETBalance();
-    fetchTotalMinted();
+    fetch('http://localhost:8000/get-user-balance', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, phone: phone })
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log("✅ Account found:", data);
+        document.getElementById('loginPanel').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        document.getElementById('yetBalance').textContent = `$${parseFloat(data.balance).toFixed(2)}`;
+        fetchTotalMinted(); // Keep this
+      })
+      .catch(err => {
+        console.error("❌ Login failed:", err);
+        alert("Login failed. Account not found.");
+      });
   } else {
-    alert('Enter both email and phone number.');
+    alert('Please enter email and phone number.');
   }
 }
 
