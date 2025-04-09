@@ -1,12 +1,15 @@
 function login() {
-  const email = document.getElementById('email').value;
+  const savingsId = document.getElementById('savingsId').value;
   const phone = document.getElementById('phone').value;
 
-  if (email && phone) {
+  if (savingsId) {
     fetch('http://localhost:8000/get-user-balance', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, phone: phone })
+      body: JSON.stringify({
+        savings_id: parseInt(savingsId),
+        phone: phone  // optional, in case you want to validate it later
+      })
     })
       .then(res => res.json())
       .then(data => {
@@ -21,7 +24,7 @@ function login() {
         alert("Login failed. Account not found.");
       });
   } else {
-    alert('Please enter email and phone number.');
+    alert('Please enter your Savings ID.');
   }
 }
 
