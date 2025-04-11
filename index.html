@@ -2,24 +2,29 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Yorlecm YUSD Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Yorlecm Express Trust – YUSD</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="clock.js" defer></script>
 </head>
 <body>
   <div class="container">
+    <!-- LOGIN PANEL -->
     <div class="login-panel" id="loginPanel">
       <div class="logo">YT</div>
-      <h2>Decentralized Financial Institution</h2>
+      <h2>DECENTRALIZED FINANCIAL INSTITUTION</h2>
       <h3>Login to YUSD Dashboard</h3>
-      <input type="number" id="savingsId" placeholder="Savings ID" required />
-      <input type="password" id="phone" placeholder="Phone Number (optional)" />
+      <input type="text" id="savingsId" placeholder="Savings ID" required />
+      <input type="password" id="phone" placeholder="Phone Number" required />
       <button onclick="login()">LOGIN</button>
     </div>
 
+    <!-- DASHBOARD -->
     <div class="dashboard" id="dashboard" style="display:none;">
       <div class="header">
-        <h2>Dashboard</h2>
+        <h2>YORLECM EXPRESS TRUST</h2>
+        <div class="clock" id="clockDisplay"></div>
+        <button class="logout" onclick="logout()">Log Out</button>
       </div>
 
       <div class="stats">
@@ -40,12 +45,41 @@
         </div>
       </div>
 
+      <!-- MINT YUSD -->
       <div class="mint-section">
         <h3>Mint YUSD</h3>
         <input type="text" id="walletAddress" placeholder="Wallet Address" />
         <input type="number" id="usdAmount" placeholder="USD Amount" />
         <button onclick="mintYUSD()">Mint YUSD</button>
         <div id="mintStatus" class="status"></div>
+      </div>
+
+      <!-- RAMP OFF -->
+      <div class="mint-section">
+        <h3>Ramp Off</h3>
+        <input type="number" id="rampAmount" placeholder="Amount to Ramp Off" />
+        <input type="text" id="destinationWallet" placeholder="Destination Wallet (USDC)" />
+        <select id="rampType">
+          <option value="bitpay">BitPay</option>
+          <option value="bank">Bank</option>
+          <option value="card">Card</option>
+          <option value="internal">Internal Routing</option>
+        </select>
+        <button onclick="rampOff()">Ramp Off</button>
+        <div id="rampStatus" class="status"></div>
+      </div>
+
+      <!-- CARD TOP-UP -->
+      <div class="mint-section">
+        <h3>Top-Up Yorlecm Card</h3>
+        <input type="number" id="cardAmount" placeholder="Amount to Load" />
+        <button onclick="topUpCard()">Top Up</button>
+        <div id="cardStatus" class="status"></div>
+      </div>
+
+      <!-- LOGO -->
+      <div class="logo-bottom">
+        <img src="logo.png" alt="YUSD Logo" height="40" />
       </div>
     </div>
   </div>
