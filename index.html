@@ -3,74 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>YORLECM EXPRESS TRUST</title>
+  <title>YUSD Login</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <!-- LOGIN PANEL -->
-    <div class="login-panel" id="loginPanel">
-      <div class="logo">YT</div>
-      <h2 class="brand-header">YORLECM EXPRESS TRUST</h2>
-      <input type="text" id="savingsId" placeholder="Savings ID" required />
-      <input type="password" id="phone" placeholder="Phone Number" required />
-      <button onclick="login()">LOGIN</button>
-    </div>
+  <div class="login-container">
+    <div class="login-box">
+      <h1 class="logo">YT</h1>
+      <h2 class="subtitle">YORLECM EXPRESS TRUST</h2>
+      <h3 class="subtitle-small">DECENTRALIZED<br>FINANCIAL<br>INSTITUTION</h3>
 
-    <!-- DASHBOARD -->
-    <div class="dashboard" id="dashboard" style="display:none;">
-      <div class="header">
-        <h2>YORLECM EXPRESS TRUST</h2>
-        <div class="clock" id="clockDisplay"></div>
-        <button onclick="logout()" class="logout-btn">Logout</button>
-      </div>
-
-      <div class="stats">
-        <div class="card">
-          <h4>YET Balance</h4>
-          <p id="yetBalance">$—</p>
-          <span>YET Savings Balance</span>
-        </div>
-        <div class="card">
-          <h4>YUSD Price</h4>
-          <p>$1.00</p>
-          <span>Stable 1:1 Backed</span>
-        </div>
-        <div class="card">
-          <h4>Total Minted</h4>
-          <p id="totalMinted">$—</p>
-          <span>Live Supply</span>
-        </div>
-      </div>
-
-      <!-- MINT YUSD -->
-      <div class="mint-section">
-        <h3>Mint YUSD</h3>
-        <input type="text" id="walletAddress" placeholder="Wallet Address" />
-        <input type="number" id="usdAmount" placeholder="USD Amount" />
-        <button onclick="mintYUSD()">Mint YUSD</button>
-        <div id="mintStatus" class="status"></div>
-      </div>
-
-      <!-- RAMP OFF -->
-      <div class="ramp-off-section">
-        <h3>Ramp Off</h3>
-        <input type="text" id="bankAccount" placeholder="Bank Account Number" />
-        <input type="text" id="routingNumber" placeholder="Routing Number" />
-        <input type="number" id="rampAmount" placeholder="YUSD Amount" />
-        <select id="destination">
-          <option value="bank">Personal Bank</option>
-          <option value="card">Prepaid Card</option>
-          <option value="bitpay">BitPay Merchant</option>
-          <option value="yorlecm">Yorlecm Internal</option>
-        </select>
-        <button onclick="submitRampOff()">Submit Ramp Off</button>
-        <div id="rampStatus" class="status"></div>
-      </div>
+      <form id="loginForm">
+        <input type="text" id="savingsId" name="savingsId" placeholder="Savings ID" required />
+        <input type="password" id="phone" name="phone" placeholder="Phone Number" required />
+        <button type="submit">LOGIN</button>
+      </form>
     </div>
   </div>
 
-  <script src="clock.js"></script>
-  <script src="script.js"></script>
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const savingsId = document.getElementById("savingsId").value;
+      const phone = document.getElementById("phone").value;
+
+      localStorage.setItem("savingsId", savingsId);
+      localStorage.setItem("phone", phone);
+
+      window.location.href = "dashboard.html";
+    });
+  </script>
 </body>
 </html>
