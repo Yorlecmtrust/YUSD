@@ -21,18 +21,6 @@
     </div>
   </div>
 
-  <script>
-    document.getElementById("loginForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const savingsId = document.getElementById("savingsId").value;
-      const phone = document.getElementById("phone").value;
-
-      localStorage.setItem("savingsId", savingsId);
-      localStorage.setItem("phone", phone);
-
-      window.location.href = "dashboard.html";
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
