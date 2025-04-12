@@ -1,10 +1,25 @@
 function updateClock() {
   const now = new Date();
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const day = days[now.getDay()];
-  const time = now.toLocaleTimeString('en-US', { hour12: true });
-  document.getElementById('clockDisplay').textContent = `${day} ${time}`;
+  const timeString = now.toLocaleTimeString("en-US", {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  });
+
+  const dateString = now.toLocaleDateString("en-US", {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
+
+  const clockElement = document.getElementById("clockDisplay");
+  if (clockElement) {
+    clockElement.textContent = `${dateString} — ${timeString}`;
+  }
 }
 
-setInterval(updateClock, 1000);
+// Call it once immediately, then every second
 updateClock();
+setInterval(updateClock, 1000);
