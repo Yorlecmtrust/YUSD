@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YUSD Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body onload="loadDashboard()">
+  <div class="dashboard-container">
+    <h1 class="logo">YT</h1>
+    <h2 class="subtitle">YORLECM EXPRESS TRUST</h2>
+    <div id="clockDisplay"></div>
+
+    <div class="section">
+      <h2>YET Balance – YET Savings Balance</h2>
+      <p id="balance">$—</p>
+    </div>
+
+    <div class="section">
+      <h2>YUSD Price</h2>
+      <p id="price">$—</p>
+    </div>
+
+    <div class="section">
+      <h2>Total YUSD Minted</h2>
+      <p id="minted">$—</p>
+    </div>
+
+    <div class="section">
+      <h2>Mint YUSD</h2>
+      <form id="mintForm">
+        <input type="text" id="wallet" placeholder="Wallet Address" required />
+        <input type="number" id="usd" placeholder="USD Amount" required />
+        <button type="submit">Mint</button>
+        <div id="mintStatus" class="status"></div>
+      </form>
+    </div>
+
+    <div class="section">
+      <h2>Ramp Off</h2>
+      <form id="rampForm">
+        <input type="text" id="bankName" placeholder="Bank Name" required />
+        <input type="text" id="routing" placeholder="Routing Number" required />
+        <input type="text" id="account" placeholder="Account Number" required />
+        <input type="number" id="rampAmount" placeholder="USD Amount" required />
+        <select id="destination" required>
+          <option value="">Select Destination</option>
+          <option value="Personal Bank">Personal Bank</option>
+          <option value="BitPay Merchant">BitPay Merchant</option>
+          <option value="Yorlecm Express Trust">Yorlecm Express Trust</option>
+        </select>
+        <button type="submit">Send</button>
+        <div id="rampStatus" class="status"></div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="clock.js"></script>
+</body>
+</html>
