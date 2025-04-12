@@ -3,17 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Yorlecm Express Trust – YUSD</title>
+  <title>YORLECM EXPRESS TRUST</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="clock.js" defer></script>
 </head>
 <body>
   <div class="container">
     <!-- LOGIN PANEL -->
     <div class="login-panel" id="loginPanel">
       <div class="logo">YT</div>
-      <h2>DECENTRALIZED FINANCIAL INSTITUTION</h2>
-      <h3>Login to YUSD Dashboard</h3>
+      <h2 class="brand-header">YORLECM EXPRESS TRUST</h2>
       <input type="text" id="savingsId" placeholder="Savings ID" required />
       <input type="password" id="phone" placeholder="Phone Number" required />
       <button onclick="login()">LOGIN</button>
@@ -24,7 +22,7 @@
       <div class="header">
         <h2>YORLECM EXPRESS TRUST</h2>
         <div class="clock" id="clockDisplay"></div>
-        <button class="logout" onclick="logout()">Log Out</button>
+        <button onclick="logout()" class="logout-btn">Logout</button>
       </div>
 
       <div class="stats">
@@ -55,34 +53,24 @@
       </div>
 
       <!-- RAMP OFF -->
-      <div class="mint-section">
+      <div class="ramp-off-section">
         <h3>Ramp Off</h3>
-        <input type="number" id="rampAmount" placeholder="Amount to Ramp Off" />
-        <input type="text" id="destinationWallet" placeholder="Destination Wallet (USDC)" />
-        <select id="rampType">
-          <option value="bitpay">BitPay</option>
-          <option value="bank">Bank</option>
-          <option value="card">Card</option>
-          <option value="internal">Internal Routing</option>
+        <input type="text" id="bankAccount" placeholder="Bank Account Number" />
+        <input type="text" id="routingNumber" placeholder="Routing Number" />
+        <input type="number" id="rampAmount" placeholder="YUSD Amount" />
+        <select id="destination">
+          <option value="bank">Personal Bank</option>
+          <option value="card">Prepaid Card</option>
+          <option value="bitpay">BitPay Merchant</option>
+          <option value="yorlecm">Yorlecm Internal</option>
         </select>
-        <button onclick="rampOff()">Ramp Off</button>
+        <button onclick="submitRampOff()">Submit Ramp Off</button>
         <div id="rampStatus" class="status"></div>
-      </div>
-
-      <!-- CARD TOP-UP -->
-      <div class="mint-section">
-        <h3>Top-Up Yorlecm Card</h3>
-        <input type="number" id="cardAmount" placeholder="Amount to Load" />
-        <button onclick="topUpCard()">Top Up</button>
-        <div id="cardStatus" class="status"></div>
-      </div>
-
-      <!-- LOGO -->
-      <div class="logo-bottom">
-        <img src="logo.png" alt="YUSD Logo" height="40" />
       </div>
     </div>
   </div>
+
+  <script src="clock.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
