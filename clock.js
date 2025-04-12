@@ -1,14 +1,9 @@
 function updateClock() {
   const now = new Date();
-  const options = {
-    weekday: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true
-  };
-  const formattedTime = now.toLocaleTimeString('en-US', options);
-  document.getElementById('clockDisplay').textContent = formattedTime;
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const day = days[now.getDay()];
+  const time = now.toLocaleTimeString('en-US', { hour12: true });
+  document.getElementById('clockDisplay').textContent = `${day} ${time}`;
 }
 
 setInterval(updateClock, 1000);
