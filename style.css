@@ -10,7 +10,6 @@ body {
   display: flex;
   height: 100vh;
   width: 100%;
-  overflow: hidden;
 }
 
 .login-panel, .dashboard {
@@ -30,12 +29,20 @@ body {
 .login-panel .logo {
   font-size: 48px;
   font-weight: bold;
-  color: #58a6ff;
+  color: #c9d1d9; /* matte black logo text */
   margin-bottom: 20px;
 }
 
-.login-panel input, .mint-section input, select {
-  width: 260px;
+.brand-header {
+  font-size: 20px;
+  font-weight: 600;
+  color: #c9d1d9;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.login-panel input, .mint-section input, .ramp-off-section input, .ramp-off-section select {
+  width: 250px;
   padding: 10px;
   margin: 10px 0;
   border-radius: 8px;
@@ -43,7 +50,7 @@ body {
   font-size: 16px;
 }
 
-.login-panel button, .mint-section button {
+.login-panel button, .mint-section button, .ramp-off-section button, .logout-btn {
   background-color: #238636;
   color: white;
   padding: 12px 24px;
@@ -52,35 +59,26 @@ body {
   font-size: 16px;
   cursor: pointer;
   margin-top: 15px;
-  transition: background-color 0.2s ease;
 }
 
-.login-panel button:hover,
-.mint-section button:hover {
-  background-color: #2ea043;
+.logout-btn {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  background-color: #da3633;
 }
 
 .dashboard .header {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  text-align: center;
   margin-bottom: 20px;
+  position: relative;
 }
 
-.dashboard .clock {
+.clock {
   font-size: 14px;
   color: #8b949e;
-}
-
-.dashboard .logout {
-  background-color: #8b949e;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  color: #ffffff;
-  font-size: 14px;
-  cursor: pointer;
+  margin-top: 5px;
 }
 
 .stats {
@@ -88,7 +86,6 @@ body {
   justify-content: space-around;
   gap: 20px;
   width: 100%;
-  margin-bottom: 30px;
 }
 
 .card {
@@ -111,13 +108,12 @@ body {
   margin: 0;
 }
 
-.mint-section {
+.mint-section, .ramp-off-section {
   margin-top: 30px;
   background-color: #161b22;
   padding: 30px;
   border-radius: 12px;
   text-align: center;
-  width: 400px;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
 }
 
@@ -125,25 +121,4 @@ body {
   margin-top: 15px;
   font-size: 14px;
   color: #3fb950;
-}
-
-.logo-bottom {
-  margin-top: 50px;
-  opacity: 0.7;
-}
-
-@media screen and (max-width: 768px) {
-  .stats {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .card {
-    width: 80%;
-    margin-bottom: 20px;
-  }
-
-  .mint-section {
-    width: 90%;
-  }
 }
