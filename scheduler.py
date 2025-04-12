@@ -1,51 +1,40 @@
-import subprocess
+import schedule
 import time
 import platform
+import subprocess
 import os
-import sys
-
-# ✅ Auto-install 'schedule' if missing
-try:
-    import schedule
-except ImportError:
-    print("📦 Installing required module: schedule")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "schedule"])
-    import schedule
+from datetime import datetime
 
 # === CONFIGURATION ===
-START_TIME = "09:00"  # 9 AM
-STOP_TIME = "11:00"   # 11 AM
-WORKDAYS = ["monday", "wednesday", "friday"]
-SCRIPT_PATH = "serverStablecoin.py"  # <-- Correct backend script
+SCRIPT_PATH = "serverStablecoin.py"
+START_TIME = "09:00"
+STOP_TIME = "11:00"
+DAYS = ["monday", "wednesday", "friday"]
 
-# Store the process handle
-server_process = None
-
+# === CONTROL LOGIC ===
 def start_server():
-    global server_process
-    if server_process is None:
-        print("🟢 Starting FastAPI server...")
-        server_process = subprocess.Popen(["uvicorn", SCRIPT_PATH.replace(".py", "") + ":app", "--host", "127.0.0.1", "--port", "8000"])
+    print(f"🟢 Starting {SCRIPT_PATH}")
+    if platform.system() == "Windows":
+        subprocess.Popen(["start", "cmd", "/k", f"python {SCRIPT_PATH}"], shell=True)
     else:
-        print("⚠️ Server already running.")
+        subprocess.Popen(["python3", SCRIPT_PATH])
 
 def stop_server():
-    global server_process
-    if server_process is not None:
-        print("🔴 Stopping FastAPI server...")
-        server_process.terminate()
-        server_process = None
+    print(f"🔴 Stopping server...")
+    if platform.system() == "Windows":
+        os.system("taskkill /f /im python.exe")
     else:
-        print("⚠️ Server not running.")
+        os.system("pkill -f serverStablecoin.py")
 
-# Set scheduler for chosen weekdays
-for day in WORKDAYS:
+# === SCHEDULE SETUP ===
+for day in DAYS:
     getattr(schedule.every(), day).at(START_TIME).do(start_server)
     getattr(schedule.every(), day).at(STOP_TIME).do(stop_server)
 
-print(f"⏰ Scheduler set: {START_TIME}–{STOP_TIME} on {', '.join(WORKDAYS).title()}s")
+print(f"⏰ Scheduler set: {START_TIME}–{STOP_TIME} on {', '.join(DAYS).title()}s")
 print("🔁 Running auto-scheduler loop...")
 
+# === LOOP ===
 while True:
     schedule.run_pending()
-    time.sleep(10)
+    time.sleep(1)
