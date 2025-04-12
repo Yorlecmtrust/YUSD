@@ -2,22 +2,22 @@ document.addEventListener("DOMContentLoaded", function () {
   const loginBtn = document.getElementById("loginBtn");
   if (loginBtn) {
     loginBtn.addEventListener("click", function () {
-      const savings_id = document.getElementById("savingsId").value;
-      const phone = document.getElementById("phoneNumber").value;
+      const email = document.getElementById("username").value;
+      const phone = document.getElementById("password").value;
 
       fetch("http://127.0.0.1:8000/get-user-balance", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ savings_id, phone })
+        body: JSON.stringify({ email, phone })
       })
       .then(response => response.json())
       .then(data => {
         if (data.savings_id && data.balance !== undefined) {
-          sessionStorage.setItem("savings_id", savings_id);
+          sessionStorage.setItem("savings_id", data.savings_id);
           sessionStorage.setItem("balance", data.balance);
-          window.location.href = "dashboard.html";  // ✅ Redirect added
+          window.location.href = "dashboard.html";
         } else {
           alert("Login failed. Please check your credentials.");
         }
@@ -97,7 +97,16 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function fetchLoanDiskBalance() {
-    fetch("http://127.0.0.1:8000/get-loandisk-balance")
+    const savings_id = sessionStorage.getItem("savings_id");
+    if (!savings_id) return;
+
+    fetch("http://127.0.0.1:8000/get-loandisk-balance", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ savings_id: parseInt(savings_id) })
+    })
       .then(response => response.json())
       .then(data => {
         document.getElementById("loanDiskBalance").textContent = `$${data.balance.toFixed(2)}`;
