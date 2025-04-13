@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const loginBtn = document.getElementById("loginBtn");
+  // Login section
+  const loginBtn = document.querySelector("button");
   if (loginBtn) {
     loginBtn.addEventListener("click", function () {
       const email = document.getElementById("username").value;
@@ -29,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Mint YUSD section
   const mintBtn = document.getElementById("mintBtn");
   if (mintBtn) {
     mintBtn.addEventListener("click", function () {
@@ -55,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Ramp Off section
   const rampBtn = document.getElementById("rampBtn");
   if (rampBtn) {
     rampBtn.addEventListener("click", function () {
@@ -88,6 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Fetch totals
   function fetchTotalMinted() {
     fetch("http://127.0.0.1:8000/get-total-minted")
       .then(response => response.json())
@@ -97,20 +101,15 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function fetchLoanDiskBalance() {
-    const savings_id = sessionStorage.getItem("savings_id");
-    if (!savings_id) return;
-
     fetch("http://127.0.0.1:8000/get-loandisk-balance", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ savings_id: parseInt(savings_id) })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ savings_id: sessionStorage.getItem("savings_id") })
     })
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById("loanDiskBalance").textContent = `$${data.balance.toFixed(2)}`;
-      });
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById("loanDiskBalance").textContent = `$${data.balance.toFixed(2)}`;
+    });
   }
 
   fetchLoanDiskBalance();
