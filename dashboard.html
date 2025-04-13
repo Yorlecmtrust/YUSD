@@ -2,61 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>YUSD Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
+  <title>YUSD Dashboard</title>
 </head>
-<body onload="loadDashboard()">
+<body>
   <div class="dashboard-container">
-    <h1 class="logo">YT</h1>
-    <h2 class="subtitle">YORLECM EXPRESS TRUST</h2>
-    <div id="clockDisplay"></div>
-
-    <div class="section">
-      <h2>YET Balance – YET Savings Balance</h2>
-      <p id="balance">$—</p>
+    <div class="header">
+      <h1>YORLECM EXPRESS TRUST</h1>
+      <div id="clock"></div>
+      <button onclick="location.href='index.html'">Log Out</button>
     </div>
 
-    <div class="section">
-      <h2>YUSD Price</h2>
-      <p id="price">$—</p>
+    <div class="cards">
+      <div class="card">
+        <h3>YET Balance</h3>
+        <p id="loanDiskBalance">$0.00</p>
+        <small>YET Savings Balance</small>
+      </div>
+      <div class="card">
+        <h3>YUSD Price</h3>
+        <p>$1.00</p>
+        <small>Stable 1:1 Backed</small>
+      </div>
+      <div class="card">
+        <h3>Total Minted</h3>
+        <p id="totalMinted">$0.00</p>
+        <small>Live Supply</small>
+      </div>
     </div>
 
-    <div class="section">
-      <h2>Total YUSD Minted</h2>
-      <p id="minted">$—</p>
-    </div>
-
-    <div class="section">
+    <div class="mint-section">
       <h2>Mint YUSD</h2>
-      <form id="mintForm">
-        <input type="text" id="wallet" placeholder="Wallet Address" required />
-        <input type="number" id="usd" placeholder="USD Amount" required />
-        <button type="submit">Mint</button>
-        <div id="mintStatus" class="status"></div>
-      </form>
+      <input type="text" id="walletAddress" placeholder="Wallet Address" />
+      <input type="number" id="usdAmount" placeholder="USD Amount" />
+      <button id="mintBtn">Mint YUSD</button>
+      <p id="mintStatus"></p>
+      <p id="mintTx"></p>
     </div>
 
-    <div class="section">
+    <div class="ramp-section">
       <h2>Ramp Off</h2>
-      <form id="rampForm">
-        <input type="text" id="bankName" placeholder="Bank Name" required />
-        <input type="text" id="routing" placeholder="Routing Number" required />
-        <input type="text" id="account" placeholder="Account Number" required />
-        <input type="number" id="rampAmount" placeholder="USD Amount" required />
-        <select id="destination" required>
-          <option value="">Select Destination</option>
-          <option value="Personal Bank">Personal Bank</option>
-          <option value="BitPay Merchant">BitPay Merchant</option>
-          <option value="Yorlecm Express Trust">Yorlecm Express Trust</option>
-        </select>
-        <button type="submit">Send</button>
-        <div id="rampStatus" class="status"></div>
-      </form>
+      <input type="text" id="bankName" placeholder="Bank Name" />
+      <input type="text" id="routingNumber" placeholder="Routing Number" />
+      <input type="text" id="accountNumber" placeholder="Account Number" />
+      <input type="number" id="rampAmount" placeholder="USD Amount" />
+      <select id="destinationOption">
+        <option value="Personal Bank">Personal Bank</option>
+        <option value="Card">Card</option>
+        <option value="BitPay Merchant">BitPay Merchant</option>
+        <option value="Yorlecm Express Trust">Yorlecm Express Trust (Internal)</option>
+      </select>
+      <button id="rampBtn">Send Ramp Off</button>
+      <p id="rampStatus"></p>
     </div>
   </div>
 
-  <script src="script.js"></script>
   <script src="clock.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
