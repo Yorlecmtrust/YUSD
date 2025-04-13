@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const loginBtn = document.querySelector("button");
   if (loginBtn) {
     loginBtn.addEventListener("click", function () {
-      const savings_id = document.getElementById("username").value;
+      const savings_id = parseInt(document.getElementById("username").value);
       const phone = document.getElementById("password").value;
 
       fetch("http://127.0.0.1:8000/get-user-balance", {
