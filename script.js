@@ -8,6 +8,12 @@ document.addEventListener("DOMContentLoaded", function () {
       const savings_id = parseInt(document.getElementById("username").value);
       const phone = document.getElementById("password").value;
 
+      console.log("SUBMITTING:", {
+        savings_id,
+        phone
+      });
+
+
       fetch("http://127.0.0.1:8000/get-user-balance", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
