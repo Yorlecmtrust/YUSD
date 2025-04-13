@@ -1,3 +1,5 @@
+// ✅ script.js - Final
+
 document.addEventListener("DOMContentLoaded", function () {
   // Login section
   const loginBtn = document.querySelector("button");
@@ -8,9 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       fetch("http://127.0.0.1:8000/get-user-balance", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, phone })
       })
       .then(response => response.json())
@@ -39,9 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       fetch("http://127.0.0.1:8000/send-stablecoin", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ to_address: wallet, usd_amount: parseFloat(amount) })
       })
       .then(response => response.json())
@@ -69,15 +67,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
       fetch("http://127.0.0.1:8000/ramp-off", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           bank_name: bankName,
           routing_number: routing,
           account_number: account,
           usd_amount: parseFloat(amount),
-          destination_option: destination
+          destination_option: destination,
+          savings_id: sessionStorage.getItem("savings_id")
         })
       })
       .then(response => response.json())
