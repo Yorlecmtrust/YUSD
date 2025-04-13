@@ -1,17 +1,17 @@
-// ✅ script.js - Final
+// ✅ script.js - Final (savings_id-based login)
 
 document.addEventListener("DOMContentLoaded", function () {
   // Login section
   const loginBtn = document.querySelector("button");
   if (loginBtn) {
     loginBtn.addEventListener("click", function () {
-      const email = document.getElementById("username").value;
+      const savings_id = document.getElementById("username").value;
       const phone = document.getElementById("password").value;
 
       fetch("http://127.0.0.1:8000/get-user-balance", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, phone })
+        body: JSON.stringify({ savings_id: parseInt(savings_id), phone })
       })
       .then(response => response.json())
       .then(data => {
