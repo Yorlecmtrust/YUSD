@@ -22,7 +22,7 @@ body {
 .logo {
   font-size: 64px;
   margin: 0;
-  color: #d1d5db; /* matte silver tone */
+  color: #d1d5db;
   font-weight: 600;
 }
 
@@ -40,9 +40,11 @@ body {
   line-height: 1.6;
 }
 
+/* ===== Inputs & Buttons ===== */
 input[type="text"],
 input[type="password"],
-input[type="number"] {
+input[type="number"],
+select {
   width: 280px;
   padding: 12px;
   margin: 10px 0;
@@ -53,7 +55,8 @@ input[type="number"] {
   font-size: 16px;
 }
 
-input::placeholder {
+input::placeholder,
+select::placeholder {
   color: #888;
 }
 
@@ -83,7 +86,7 @@ button:hover {
   margin-top: 10px;
 }
 
-/* ===== Dashboard Layout ===== */
+/* ===== Dashboard Cards ===== */
 .dashboard-container .cards {
   display: flex;
   justify-content: space-around;
@@ -114,15 +117,14 @@ button:hover {
   color: #a0a0a0;
 }
 
+/* ===== Mint & Ramp Sections ===== */
 .mint-section,
 .ramp-section {
-  margin: 30px;
+  margin: 30px auto;
   padding: 20px;
   background-color: #161b22;
   border-radius: 10px;
   max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .mint-section input,
@@ -154,4 +156,34 @@ button:hover {
 .mint-section button:hover,
 .ramp-section button:hover {
   background-color: #126831;
+}
+
+/* ===== Zelle Info Text ===== */
+.ramp-section small {
+  color: #999;
+  font-size: 13px;
+  display: block;
+  margin-top: -10px;
+  margin-bottom: 15px;
+}
+
+/* ===== Ramp Log Viewer ===== */
+#rampLogViewer {
+  margin: 30px auto;
+  padding: 15px;
+  max-width: 640px;
+  font-size: 14px;
+  background-color: #10151c;
+  border-radius: 8px;
+  border: 1px solid #333;
+  color: #c9d1d9;
+}
+
+#rampLogViewer ul {
+  padding-left: 20px;
+}
+
+#rampLogViewer li {
+  margin-bottom: 8px;
+  line-height: 1.4;
 }
