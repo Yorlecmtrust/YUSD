@@ -87,9 +87,9 @@ document.addEventListener("DOMContentLoaded", function () {
           bank_name: bank,
           routing_number: routing,
           account_number: account,
-          usd_amount: parseFloat(amount),
-          destination_option: option,
-          savings_id: sessionStorage.getItem("savings_id")
+          amount: parseFloat(amount),
+          destination: option,
+          savings_id: parseInt(sessionStorage.getItem("savings_id"))
         })
       })
         .then(res => res.json())
