@@ -13,11 +13,10 @@
       <h1>YT</h1>
       <p>YORLECM EXPRESS TRUST</p>
       <p class="subtitle">DECENTRALIZED<br>FINANCIAL<br>INSTITUTION</p>
-
       <input type="password" id="username" placeholder="Savings ID" />
       <input type="password" id="password" placeholder="Phone Number" />
-
       <button id="loginBtn">LOGIN</button>
+      <p class="subtitle-small" style="margin-top: 12px;">YET Hours: Mon/Wed/Fri 09:00–11:00 PST</p>
     </div>
   </div>
 
@@ -67,17 +66,21 @@
         <option value="Card">Card</option>
         <option value="BitPay Merchant">BitPay Merchant</option>
         <option value="Yorlecm Express Trust">Yorlecm Express Trust (Internal)</option>
+        <option value="Zelle">Zelle</option>
       </select>
       <button id="rampBtn">Send Ramp Off</button>
       <p id="rampStatus"></p>
     </div>
+
+    <!-- ✅ RAMP LOG VIEWER -->
+    <div id="rampLogViewer" style="margin: 30px 0 0 10px; font-size: 14px;"></div>
   </div>
 
   <script src="clock.js"></script>
   <script src="script.js"></script>
 
   <script>
-    // Clear inputs on logout (privacy)
+    // Clear session on logout (privacy)
     document.getElementById("logoutBtn").addEventListener("click", function () {
       sessionStorage.clear();
       document.getElementById("dashboardView").style.display = "none";
