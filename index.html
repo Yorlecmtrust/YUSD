@@ -14,8 +14,8 @@
       <p>YORLECM EXPRESS TRUST</p>
       <p class="subtitle">DECENTRALIZED<br>FINANCIAL<br>INSTITUTION</p>
 
-      <input type="text" id="username" placeholder="Username" />
-      <input type="password" id="password" placeholder="Password" />
+      <input type="password" id="username" placeholder="Savings ID" />
+      <input type="password" id="password" placeholder="Phone Number" />
 
       <button id="loginBtn">LOGIN</button>
     </div>
@@ -74,100 +74,17 @@
   </div>
 
   <script src="clock.js"></script>
+  <script src="script.js"></script>
+
   <script>
-    // Show clock
-    setInterval(() => {
-      const now = new Date();
-      const clock = document.getElementById("clock");
-      if (clock) clock.textContent = now.toLocaleString();
-    }, 1000);
-
-    // LOGIN
-    document.getElementById("loginBtn").addEventListener("click", function () {
-      const email = document.getElementById("username").value;
-      const phone = document.getElementById("password").value;
-
-      fetch("http://127.0.0.1:8000/get-user-balance", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, phone })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.savings_id && data.balance !== undefined) {
-          sessionStorage.setItem("savings_id", data.savings_id);
-          sessionStorage.setItem("balance", data.balance);
-          document.getElementById("loginView").style.display = "none";
-          document.getElementById("dashboardView").style.display = "block";
-          document.getElementById("loanDiskBalance").textContent = `$${parseFloat(data.balance).toFixed(2)}`;
-          fetchTotalMinted();
-        } else {
-          alert("Login failed. Check your credentials.");
-        }
-      })
-      .catch(err => alert("Server error. Please try again."));
-    });
-
-    // LOGOUT
+    // Clear inputs on logout (privacy)
     document.getElementById("logoutBtn").addEventListener("click", function () {
       sessionStorage.clear();
       document.getElementById("dashboardView").style.display = "none";
       document.getElementById("loginView").style.display = "flex";
+      document.getElementById("username").value = "";
+      document.getElementById("password").value = "";
     });
-
-    // MINT
-    document.getElementById("mintBtn").addEventListener("click", function () {
-      const wallet = document.getElementById("walletAddress").value;
-      const amount = document.getElementById("usdAmount").value;
-
-      fetch("http://127.0.0.1:8000/send-stablecoin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ to_address: wallet, usd_amount: parseFloat(amount) })
-      })
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("mintStatus").textContent = `✅ Sent ${data.usd_amount} YUSD`;
-        document.getElementById("mintTx").textContent = `TX Hash: ${data.tx_hash}`;
-        fetchTotalMinted();
-      })
-      .catch(() => alert("Minting failed."));
-    });
-
-    // RAMP OFF
-    document.getElementById("rampBtn").addEventListener("click", function () {
-      const bank = document.getElementById("bankName").value;
-      const routing = document.getElementById("routingNumber").value;
-      const account = document.getElementById("accountNumber").value;
-      const amount = document.getElementById("rampAmount").value;
-      const option = document.getElementById("destinationOption").value;
-
-      fetch("http://127.0.0.1:8000/ramp-off", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          bank_name: bank,
-          routing_number: routing,
-          account_number: account,
-          usd_amount: parseFloat(amount),
-          destination_option: option,
-          savings_id: sessionStorage.getItem("savings_id")
-        })
-      })
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("rampStatus").textContent = `✅ Ramp off complete: ${data.status}`;
-      })
-      .catch(() => alert("Ramp off failed."));
-    });
-
-    function fetchTotalMinted() {
-      fetch("http://127.0.0.1:8000/get-total-minted")
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById("totalMinted").textContent = `$${data.total.toFixed(2)}`;
-        });
-    }
   </script>
 </body>
 </html>
