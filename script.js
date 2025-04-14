@@ -15,8 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     return isOpenDay && isOpenTime;
   }
-
-  //function blockActionsIfClosed() {
+  function blockActionsIfClosed()
     if (!isWithinYETHours()) {
       const elements = [loginBtn, rampBtn, mintBtn];
       elements.forEach(el => {
@@ -144,5 +143,5 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // 🕒 Block if outside business hours
-  blockActionsIfClosed();
+  //blockActionsIfClosed();
 });
