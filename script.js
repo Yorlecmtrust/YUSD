@@ -3,30 +3,28 @@ document.addEventListener("DOMContentLoaded", function () {
   const rampBtn = document.getElementById("rampBtn");
   const mintBtn = document.getElementById("mintBtn");
 
-  // 🕒 Enforce YET Business Hours (Mon/Wed/Fri, 09:00–11:00 PST)
+  // ✅ Business Hour Logic
   function isWithinYETHours() {
     const now = new Date();
-    const day = now.getUTCDay(); // Sunday = 0, Monday = 1, etc.
-    const hour = now.getUTCHours(); // UTC hours
-    const pstHour = (hour + 24 - 7) % 24; // Convert to PST (UTC-7)
+    const day = now.getUTCDay();
+    const hour = now.getUTCHours();
+    const pstHour = (hour + 24 - 7) % 24;
 
-    const isOpenDay = [1, 3, 5].includes(day); // Mon, Wed, Fri
+    const isOpenDay = [1, 3, 5].includes(day);
     const isOpenTime = pstHour >= 9 && pstHour < 11;
-
     return isOpenDay && isOpenTime;
   }
+
   function blockActionsIfClosed() {
     if (!isWithinYETHours()) {
       const elements = [loginBtn, rampBtn, mintBtn];
-      elements.forEach(el => {
-        if (el) el.disabled = true;
-      });
+      elements.forEach(el => { if (el) el.disabled = true; });
       const status = document.getElementById("rampStatus");
       if (status) status.textContent = "⏳ YET is closed. Try again Mon/Wed/Fri 09–11 AM PST.";
     }
   }
 
-  // ✅ LOGIN
+  // ✅ Login
   if (loginBtn) {
     loginBtn.addEventListener("click", function () {
       const savings_id = parseInt(document.getElementById("username").value);
@@ -53,26 +51,23 @@ document.addEventListener("DOMContentLoaded", function () {
             fetchTotalMinted();
             renderRampLog();
           } else {
-            alert("Login failed. Check your credentials.");
+            alert("Login failed.");
           }
         })
-        .catch(error => {
-          console.error("Login Error:", error);
-          alert("Server error. Please try again later.");
-        });
+        .catch(() => alert("Server error. Try again."));
     });
   }
 
-  // ✅ MINT
+  // ✅ Mint
   if (mintBtn) {
     mintBtn.addEventListener("click", function () {
       const wallet = document.getElementById("walletAddress").value;
-      const amount = document.getElementById("usdAmount").value;
+      const amount = parseFloat(document.getElementById("usdAmount").value);
 
       fetch("http://127.0.0.1:8000/send-stablecoin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ to_address: wallet, usd_amount: parseFloat(amount) })
+        body: JSON.stringify({ to_address: wallet, usd_amount: amount })
       })
         .then(res => res.json())
         .then(data => {
@@ -84,39 +79,42 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ✅ RAMP OFF
+  // ✅ Ramp Off
   if (rampBtn) {
     rampBtn.addEventListener("click", function () {
       const bank = document.getElementById("bankName").value;
       const routing = document.getElementById("routingNumber").value;
       const account = document.getElementById("accountNumber").value;
-      const amount = document.getElementById("rampAmount").value;
+      const amount = parseFloat(document.getElementById("rampAmount").value);
       const option = document.getElementById("destinationOption").value;
+      const savings_id = parseInt(sessionStorage.getItem("savings_id"));
       const priority = option === "Personal Bank" ? "wire" : "standard";
+
+      const payload = {
+        savings_id: savings_id,
+        account_number: account || "ZELLE-ONLY",
+        routing_number: routing || "N/A",
+        bank_name: bank || "Zelle",
+        amount: amount,
+        destination: option,
+        priority: priority
+      };
 
       fetch("http://127.0.0.1:8000/ramp-off", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          bank_name: bank,
-          routing_number: routing,
-          account_number: account,
-          usd_amount: parseFloat(amount),
-          destination_option: option,
-          savings_id: parseInt(sessionStorage.getItem("savings_id")),
-          priority: priority
-        })
+        body: JSON.stringify(payload)
       })
         .then(res => res.json())
         .then(data => {
           document.getElementById("rampStatus").textContent = `✅ Ramp off complete: ${data.status}`;
-          renderRampLog(); // refresh log
+          renderRampLog();
         })
         .catch(() => alert("Ramp off failed."));
     });
   }
 
-  // ✅ Fetch Mint Total
+  // ✅ Fetch Total Minted
   function fetchTotalMinted() {
     fetch("http://127.0.0.1:8000/get-total-minted")
       .then(res => res.json())
@@ -125,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // ✅ Render Ramp Log Viewer
+  // ✅ Ramp Log Viewer
   function renderRampLog() {
     fetch("http://127.0.0.1:8000/get-ramp-log")
       .then(res => res.json())
@@ -142,6 +140,5 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // 🕒 Block if outside business hours
-  //blockActionsIfClosed();
+  // 🕒 blockActionsIfClosed(); // Uncomment to enable time gating
 });
