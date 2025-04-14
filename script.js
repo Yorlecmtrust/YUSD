@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return isOpenDay && isOpenTime;
   }
 
-  function blockActionsIfClosed() {
+  //function blockActionsIfClosed() {
     if (!isWithinYETHours()) {
       const elements = [loginBtn, rampBtn, mintBtn];
       elements.forEach(el => {
