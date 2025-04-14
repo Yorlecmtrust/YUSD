@@ -6,6 +6,13 @@ document.addEventListener("DOMContentLoaded", function () {
       const phone = document.getElementById("password").value;
       const savings_id = parseInt(savings_id_raw);
 
+      console.log("Sending login:", {
+        savings_id,
+        phone,
+        type_id: typeof savings_id
+      });
+
+
       if (!savings_id || !phone) {
         alert("Please enter both Savings ID and Phone Number.");
         return;
