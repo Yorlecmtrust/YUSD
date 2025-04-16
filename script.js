@@ -9,10 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const day = now.getUTCDay();
     const hour = now.getUTCHours();
     const pstHour = (hour + 24 - 7) % 24;
-
-    const isOpenDay = [1, 3, 5].includes(day);
-    const isOpenTime = pstHour >= 9 && pstHour < 11;
-    return isOpenDay && isOpenTime;
+    return [1, 3, 5].includes(day) && pstHour >= 9 && pstHour < 11;
   }
 
   function blockActionsIfClosed() {
@@ -29,9 +26,10 @@ document.addEventListener("DOMContentLoaded", function () {
     loginBtn.addEventListener("click", function () {
       const savings_id = parseInt(document.getElementById("username").value);
       const phone = document.getElementById("password").value;
+      const email = document.getElementById("email").value;
 
-      if (!savings_id || !phone) {
-        alert("Please enter both Savings ID and Phone Number.");
+      if (!savings_id || !phone || !email) {
+        alert("Please enter Savings ID, Phone Number, and Email.");
         return;
       }
 
@@ -45,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
           if (data.savings_id && data.balance !== undefined) {
             sessionStorage.setItem("savings_id", data.savings_id);
             sessionStorage.setItem("balance", data.balance);
+            sessionStorage.setItem("email", email); // ✅ Store email
             document.getElementById("loginView").style.display = "none";
             document.getElementById("dashboardView").style.display = "block";
             document.getElementById("loanDiskBalance").textContent = `$${parseFloat(data.balance).toFixed(2)}`;
@@ -58,16 +57,22 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ✅ Mint
+  // ✅ Mint YUSD
   if (mintBtn) {
     mintBtn.addEventListener("click", function () {
       const wallet = document.getElementById("walletAddress").value;
       const amount = parseFloat(document.getElementById("usdAmount").value);
+      const email = sessionStorage.getItem("email");
+
+      if (!wallet || !amount || !email) {
+        alert("Enter wallet, amount, and make sure you're logged in with email.");
+        return;
+      }
 
       fetch("http://127.0.0.1:8000/send-stablecoin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ to_address: wallet, usd_amount: amount })
+        body: JSON.stringify({ to_address: wallet, usd_amount: amount, email: email })
       })
         .then(res => res.json())
         .then(data => {
@@ -140,5 +145,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // 🕒 blockActionsIfClosed(); // Uncomment to enable time gating
+  // 🕒 Optional: block access outside hours
+  // blockActionsIfClosed();
 });
