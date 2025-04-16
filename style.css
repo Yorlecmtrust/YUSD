@@ -44,6 +44,7 @@ body {
 input[type="text"],
 input[type="password"],
 input[type="number"],
+input[type="email"],
 select {
   width: 280px;
   padding: 12px;
@@ -117,7 +118,7 @@ button:hover {
   color: #a0a0a0;
 }
 
-/* ===== Mint & Ramp Sections ===== */
+/* ===== Mint, Ramp, Invoice Sections ===== */
 .mint-section,
 .ramp-section {
   margin: 30px auto;
@@ -156,6 +157,13 @@ button:hover {
 .mint-section button:hover,
 .ramp-section button:hover {
   background-color: #126831;
+}
+
+/* ===== BitPay Invoice Status Text ===== */
+#bitpayStatus {
+  color: #a0f0c3;
+  font-size: 14px;
+  margin-top: 10px;
 }
 
 /* ===== Zelle Info Text ===== */
