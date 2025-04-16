@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:,"> <!-- ✅ Prevent favicon.ico 404 -->
   <title>YUSD Unified Dashboard</title>
 </head>
 <body>
@@ -69,11 +70,19 @@
         <option value="Card">Card</option>
         <option value="BitPay Merchant">BitPay Merchant</option>
         <option value="Yorlecm Express Trust">Yorlecm Express Trust (Internal)</option>
-        <option value="Zelle">Zelle (Email or Phone)</option> <!-- ✅ Zelle Mode -->
+        <option value="Zelle">Zelle (Email or Phone)</option>
       </select>
       <small style="color:#999;">Use for fast payout via email or phone number</small>
       <button id="rampBtn">Send Ramp Off</button>
       <p id="rampStatus"></p>
+    </div>
+
+    <div class="ramp-section">
+      <h2>Pay BitPay Invoice</h2>
+      <input type="text" id="bitpayUrl" placeholder="Invoice URL (https://bitpay.com/...)" />
+      <input type="number" id="bitpayAmount" placeholder="Invoice Amount in USD" />
+      <button id="bitpayBtn">Send Invoice Payment</button>
+      <p id="bitpayStatus"></p>
     </div>
 
     <!-- ✅ RAMP LOG VIEWER -->
