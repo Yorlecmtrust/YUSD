@@ -2,8 +2,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const loginBtn = document.getElementById("loginBtn");
   const rampBtn = document.getElementById("rampBtn");
   const mintBtn = document.getElementById("mintBtn");
+  const bitpayBtn = document.getElementById("bitpayBtn");
 
-  // ✅ Business Hour Logic
   function isWithinYETHours() {
     const now = new Date();
     const day = now.getUTCDay();
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
           if (data.savings_id && data.balance !== undefined) {
             sessionStorage.setItem("savings_id", data.savings_id);
             sessionStorage.setItem("balance", data.balance);
-            sessionStorage.setItem("email", email); // ✅ Store email
+            sessionStorage.setItem("email", email);
             document.getElementById("loginView").style.display = "none";
             document.getElementById("dashboardView").style.display = "block";
             document.getElementById("loanDiskBalance").textContent = `$${parseFloat(data.balance).toFixed(2)}`;
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ✅ Mint YUSD
+  // ✅ Mint
   if (mintBtn) {
     mintBtn.addEventListener("click", function () {
       const wallet = document.getElementById("walletAddress").value;
@@ -119,6 +119,35 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // ✅ BitPay Invoice
+  if (bitpayBtn) {
+    bitpayBtn.addEventListener("click", () => {
+      const invoice_url = document.getElementById("bitpayUrl").value;
+      const amount = parseFloat(document.getElementById("bitpayAmount").value);
+      const email = sessionStorage.getItem("email");
+
+      if (!invoice_url || !amount || !email) {
+        alert("Please enter invoice URL, amount, and be logged in with email.");
+        return;
+      }
+
+      fetch("http://127.0.0.1:8000/pay-bitpay-invoice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ invoice_url, amount, email })
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("bitpayStatus").textContent =
+            `✅ Invoice sent: ${data.payout_id}`;
+        })
+        .catch(() => {
+          document.getElementById("bitpayStatus").textContent =
+            `❌ Failed to send invoice`;
+        });
+    });
+  }
+
   // ✅ Fetch Total Minted
   function fetchTotalMinted() {
     fetch("http://127.0.0.1:8000/get-total-minted")
@@ -128,20 +157,19 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // ✅ Ramp Log Viewer
+  // ✅ Ramp Log Viewer (safe check fix)
   function renderRampLog() {
     fetch("http://127.0.0.1:8000/get-ramp-log")
       .then(res => res.json())
       .then(data => {
         const viewer = document.getElementById("rampLogViewer");
-        if (viewer) {
-          let html = "<h3>Ramp-Off History</h3><ul>";
-          data.log.slice(1).reverse().forEach(row => {
-            html += `<li>💸 $${row[1]} → ${row[4]} (${row[2]}) — ${row[5]}</li>`;
-          });
-          html += "</ul>";
-          viewer.innerHTML = html;
-        }
+        if (!data.log || !Array.isArray(data.log)) return;
+        let html = "<h3>Ramp-Off History</h3><ul>";
+        data.log.slice(1).reverse().forEach(row => {
+          html += `<li>💸 $${row[1]} → ${row[4]} (${row[2]}) — ${row[5]}</li>`;
+        });
+        html += "</ul>";
+        viewer.innerHTML = html;
       });
   }
 
