@@ -13,8 +13,11 @@
       <h1>YT</h1>
       <p>YORLECM EXPRESS TRUST</p>
       <p class="subtitle">DECENTRALIZED<br>FINANCIAL<br>INSTITUTION</p>
+
       <input type="password" id="username" placeholder="Savings ID" />
       <input type="password" id="password" placeholder="Phone Number" />
+      <input type="email" id="email" placeholder="Email for Receipts & Invoices" required />
+
       <button id="loginBtn">LOGIN</button>
       <p class="subtitle-small" style="margin-top: 12px;">YET Hours: Mon/Wed/Fri 09:00–11:00 PST</p>
     </div>
@@ -66,8 +69,9 @@
         <option value="Card">Card</option>
         <option value="BitPay Merchant">BitPay Merchant</option>
         <option value="Yorlecm Express Trust">Yorlecm Express Trust (Internal)</option>
-        <option value="Zelle">Zelle</option>
+        <option value="Zelle">Zelle (Email or Phone)</option> <!-- ✅ Zelle Mode -->
       </select>
+      <small style="color:#999;">Use for fast payout via email or phone number</small>
       <button id="rampBtn">Send Ramp Off</button>
       <p id="rampStatus"></p>
     </div>
@@ -76,17 +80,20 @@
     <div id="rampLogViewer" style="margin: 30px 0 0 10px; font-size: 14px;"></div>
   </div>
 
+  <!-- ✅ SCRIPT HOOKS -->
   <script src="clock.js"></script>
   <script src="script.js"></script>
 
   <script>
-    // Clear session on logout (privacy)
+    // 🔐 Clear session on logout
     document.getElementById("logoutBtn").addEventListener("click", function () {
       sessionStorage.clear();
       document.getElementById("dashboardView").style.display = "none";
       document.getElementById("loginView").style.display = "flex";
+
       document.getElementById("username").value = "";
       document.getElementById("password").value = "";
+      document.getElementById("email").value = "";
     });
   </script>
 </body>
