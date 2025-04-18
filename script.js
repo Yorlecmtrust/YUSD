@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const rampBtn = document.getElementById("rampBtn");
   const mintBtn = document.getElementById("mintBtn");
   const bitpayBtn = document.getElementById("bitpayBtn");
+  const bridgeBtn = document.getElementById("bridgeBtn");
 
   function isWithinYETHours() {
     const now = new Date();
@@ -14,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function blockActionsIfClosed() {
     if (!isWithinYETHours()) {
-      const elements = [loginBtn, rampBtn, mintBtn];
+      const elements = [loginBtn, rampBtn, mintBtn, bridgeBtn];
       elements.forEach(el => { if (el) el.disabled = true; });
       const status = document.getElementById("rampStatus");
       if (status) status.textContent = "⏳ YET is closed. Try again Mon/Wed/Fri 09–11 AM PST.";
@@ -116,6 +117,33 @@ document.addEventListener("DOMContentLoaded", function () {
           renderRampLog();
         })
         .catch(() => alert("Ramp off failed."));
+    });
+  }
+
+  // ✅ Bridge to NOWPayments
+  if (bridgeBtn) {
+    bridgeBtn.addEventListener("click", function () {
+      const amount = parseFloat(document.getElementById("bridgeAmount").value);
+
+      if (!amount) {
+        alert("Please enter the amount to bridge.");
+        return;
+      }
+
+      fetch("http://127.0.0.1:8000/bridge-to-nowpayments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: amount })
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("bridgeStatus").textContent =
+            `✅ Bridged to NOWPayments. TX: ${data.tx_hash}`;
+        })
+        .catch(() => {
+          document.getElementById("bridgeStatus").textContent =
+            `❌ Failed to bridge to NOWPayments.`;
+        });
     });
   }
 
