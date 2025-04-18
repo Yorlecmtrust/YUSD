@@ -123,17 +123,18 @@ document.addEventListener("DOMContentLoaded", function () {
   // ✅ Bridge to NOWPayments
   if (bridgeBtn) {
     bridgeBtn.addEventListener("click", function () {
+      const wallet = document.getElementById("bridgeWallet").value;
       const amount = parseFloat(document.getElementById("bridgeAmount").value);
 
-      if (!amount) {
-        alert("Please enter the amount to bridge.");
+      if (!wallet || !amount) {
+        alert("Please enter both wallet and amount.");
         return;
       }
 
       fetch("http://127.0.0.1:8000/bridge-to-nowpayments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: amount })
+        body: JSON.stringify({ to_address: wallet, amount: amount })
       })
         .then(res => res.json())
         .then(data => {
@@ -185,7 +186,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // ✅ Ramp Log Viewer (safe check fix)
+  // ✅ Ramp Log Viewer
   function renderRampLog() {
     fetch("http://127.0.0.1:8000/get-ramp-log")
       .then(res => res.json())
@@ -201,6 +202,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // 🕒 Optional: block access outside hours
+  // 🕒 Optional lock window
   // blockActionsIfClosed();
 });
