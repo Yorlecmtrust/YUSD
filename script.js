@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(res => res.json())
         .then(data => {
           document.getElementById("mintStatus").textContent = `✅ Sent ${data.usd_amount} YUSD`;
-          document.getElementById("mintTx").textContent = `TX Hash: ${data.tx_hash}`;
+          document.getElementById("mintTx").textContent = `Swap TX: ${data.swap_tx}`; // ✅ Corrected
           fetchTotalMinted();
         })
         .catch(() => alert("Minting failed."));
