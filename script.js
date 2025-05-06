@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const mintBtn = document.getElementById("mintBtn");
   const bitpayBtn = document.getElementById("bitpayBtn");
   const bridgeBtn = document.getElementById("bridgeBtn");
+  const rampFiatBtn = document.getElementById("rampFiatBtn");
 
   function isWithinYETHours() {
     const now = new Date();
@@ -15,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function blockActionsIfClosed() {
     if (!isWithinYETHours()) {
-      const elements = [loginBtn, rampBtn, mintBtn, bridgeBtn];
+      const elements = [loginBtn, rampBtn, mintBtn, bridgeBtn, rampFiatBtn];
       elements.forEach(el => { if (el) el.disabled = true; });
       const status = document.getElementById("rampStatus");
       if (status) status.textContent = "⏳ YET is closed. Try again Mon/Wed/Fri 09–11 AM PST.";
@@ -78,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(res => res.json())
         .then(data => {
           document.getElementById("mintStatus").textContent = `✅ Sent ${data.usd_amount} YUSD`;
-          document.getElementById("mintTx").textContent = `Swap TX: ${data.swap_tx}`; // ✅ Corrected
+          document.getElementById("mintTx").textContent = `Swap TX: ${data.swap_tx}`;
           fetchTotalMinted();
         })
         .catch(() => alert("Minting failed."));
@@ -138,13 +139,42 @@ document.addEventListener("DOMContentLoaded", function () {
       })
         .then(res => res.json())
         .then(data => {
-          document.getElementById("bridgeStatus").textContent =
-            `✅ Bridged to NOWPayments. TX: ${data.tx_hash}`;
+          document.getElementById("bridgeStatus").textContent = `✅ Bridged to NOWPayments. TX: ${data.tx_hash}`;
         })
         .catch(() => {
-          document.getElementById("bridgeStatus").textContent =
-            `❌ Failed to bridge to NOWPayments.`;
+          document.getElementById("bridgeStatus").textContent = `❌ Failed to bridge to NOWPayments.`;
         });
+    });
+  }
+
+  // ✅ Ramp Fiat (Buy ETH with USD via NOWPayments)
+  if (rampFiatBtn) {
+    rampFiatBtn.addEventListener("click", async function () {
+      const wallet = document.getElementById("rampWallet").value;
+      const usdAmount = document.getElementById("rampUsdAmount").value;
+
+      if (!wallet || !usdAmount) {
+        alert("Please enter wallet and USD amount.");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/ramp-fiat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ wallet, usd_amount: parseFloat(usdAmount) })
+        });
+
+        const result = await response.json();
+
+        if (result.invoice_url) {
+          window.open(result.invoice_url, "_blank");
+        } else {
+          alert("Something went wrong: " + JSON.stringify(result));
+        }
+      } catch (error) {
+        alert("Error: " + error.message);
+      }
     });
   }
 
@@ -167,12 +197,10 @@ document.addEventListener("DOMContentLoaded", function () {
       })
         .then(res => res.json())
         .then(data => {
-          document.getElementById("bitpayStatus").textContent =
-            `✅ Invoice sent: ${data.payout_id}`;
+          document.getElementById("bitpayStatus").textContent = `✅ Invoice sent: ${data.payout_id}`;
         })
         .catch(() => {
-          document.getElementById("bitpayStatus").textContent =
-            `❌ Failed to send invoice`;
+          document.getElementById("bitpayStatus").textContent = `❌ Failed to send invoice`;
         });
     });
   }
