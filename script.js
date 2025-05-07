@@ -150,30 +150,35 @@ document.addEventListener("DOMContentLoaded", function () {
   // ✅ Ramp Fiat (Buy ETH with USD via NOWPayments)
   if (rampFiatBtn) {
     rampFiatBtn.addEventListener("click", async function () {
-      const wallet = document.getElementById("rampWallet").value;
-      const usdAmount = document.getElementById("rampUsdAmount").value;
+      const toAddress = document.getElementById("walletInput").value;
+      const amountUSD = parseFloat(document.getElementById("usdAmountInput").value);
 
-      if (!wallet || !usdAmount) {
-        alert("Please enter wallet and USD amount.");
+      if (!toAddress || isNaN(amountUSD)) {
+        document.getElementById("rampFiatStatus").textContent = "❌ Enter valid wallet and amount.";
         return;
       }
 
+      document.getElementById("rampFiatStatus").textContent = "⏳ Processing payment...";
+
       try {
-        const response = await fetch("http://127.0.0.1:8000/ramp-fiat", {
+        const response = await fetch("http://localhost:8000/ramp-fiat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ wallet, usd_amount: parseFloat(usdAmount) })
+          body: JSON.stringify({ to_address: toAddress, usd_amount: amountUSD })
         });
 
         const result = await response.json();
 
         if (result.invoice_url) {
+          document.getElementById("rampFiatStatus").textContent = "✅ Payment link created!";
           window.open(result.invoice_url, "_blank");
         } else {
-          alert("Something went wrong: " + JSON.stringify(result));
+          document.getElementById("rampFiatStatus").textContent =
+            "❌ Failed: " + (result.detail || "Unknown error");
         }
       } catch (error) {
-        alert("Error: " + error.message);
+        document.getElementById("rampFiatStatus").textContent = "❌ Request failed.";
+        console.error(error);
       }
     });
   }
