@@ -152,9 +152,10 @@ document.addEventListener("DOMContentLoaded", function () {
     rampFiatBtn.addEventListener("click", async function () {
       const toAddress = document.getElementById("walletInput").value;
       const amountUSD = parseFloat(document.getElementById("usdAmountInput").value);
+      const email = sessionStorage.getItem("email");
 
-      if (!toAddress || isNaN(amountUSD)) {
-        document.getElementById("rampFiatStatus").textContent = "❌ Enter valid wallet and amount.";
+      if (!toAddress || isNaN(amountUSD) || !email) {
+        document.getElementById("rampFiatStatus").textContent = "❌ Missing wallet, amount, or login.";
         return;
       }
 
@@ -164,7 +165,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const response = await fetch("http://localhost:8000/ramp-fiat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ to_address: toAddress, usd_amount: amountUSD })
+          body: JSON.stringify({
+            to_address: toAddress,
+            usd_amount: amountUSD,
+            email: email
+          })
         });
 
         const result = await response.json();
