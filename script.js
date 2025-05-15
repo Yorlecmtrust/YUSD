@@ -98,7 +98,8 @@ document.addEventListener("DOMContentLoaded", function () {
       fetch("http://127.0.0.1:8000/send-stablecoin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ to_address: wallet, usd_amount: amount, email: email })
+        body: JSON.stringify({ to_address: wallet, usd_amount: amount, email: email,
+        savings_id: parseInt(sessionStorage.getItem("savings_id")) })
       })
         .then(res => res.json())
         .then(data => {
