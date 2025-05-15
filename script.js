@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const loginBtn = document.getElementById("loginBtn");
   const rampBtn = document.getElementById("rampBtn");
-  const mintBtn = document.getElementById("mintBtn");
+  const buyEthBtn = document.getElementById("buyEthBtn");
   const bitpayBtn = document.getElementById("bitpayBtn");
   const rampFiatBtn = document.getElementById("rampFiatBtn");
 
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function blockActionsIfClosed() {
     if (!isWithinYETHours()) {
-      const elements = [loginBtn, rampBtn, mintBtn, rampFiatBtn];
+      const elements = [loginBtn, rampBtn, buyEthBtn, rampFiatBtn];
       elements.forEach(el => { if (el) el.disabled = true; });
       const status = document.getElementById("rampStatus");
       if (status) status.textContent = "⏳ YET is closed. Try again Mon/Wed/Fri 09–11 AM PST.";
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("loginView").style.display = "none";
             document.getElementById("dashboardView").style.display = "block";
             document.getElementById("loanDiskBalance").textContent = `$${parseFloat(data.balance).toFixed(2)}`;
-            fetchTotalMinted();
+            fetchTotalPurchase();
             renderRampLog();
           } else {
             alert("Login failed.");
@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ✅ Mint
+  // ✅ Eth
   if (buyEthBtn) {
     buyEthBtn.addEventListener("click", function () {
       const wallet = document.getElementById("walletAddress").value;
@@ -103,11 +103,11 @@ document.addEventListener("DOMContentLoaded", function () {
       })
         .then(res => res.json())
         .then(data => {
-          document.getElementById("mintStatus").textContent = `✅ Sent ${data.usd_amount} YUSD`;
-          document.getElementById("mintTx").textContent = `Swap TX: ${data.swap_tx || 'N/A'}`;
-          fetchTotalMinted();
+          document.getElementById("purchaseStatus").textContent = `✅ Sent ${data.usd_amount} YUSD`;
+          document.getElementById("purchaseTx").textContent = `Swap TX: ${data.swap_tx || 'N/A'}`;
+          fetchTotalPurchase();
         })
-        .catch(() => alert("Minting failed."));
+        .catch(() => alert("Ethpurchase failed."));
     });
   }
 
