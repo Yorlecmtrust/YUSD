@@ -84,8 +84,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ✅ Mint
-  if (mintBtn) {
-    mintBtn.addEventListener("click", function () {
+  if (buyEthBtn) {
+    buyEthBtn.addEventListener("click", function () {
       const wallet = document.getElementById("walletAddress").value;
       const amount = parseFloat(document.getElementById("usdAmount").value);
       const email = sessionStorage.getItem("email");
