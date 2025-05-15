@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const rampBtn = document.getElementById("rampBtn");
   const mintBtn = document.getElementById("mintBtn");
   const bitpayBtn = document.getElementById("bitpayBtn");
-  const bridgeBtn = document.getElementById("bridgeBtn");
   const rampFiatBtn = document.getElementById("rampFiatBtn");
 
   function isWithinYETHours() {
@@ -16,12 +15,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function blockActionsIfClosed() {
     if (!isWithinYETHours()) {
-      const elements = [loginBtn, rampBtn, mintBtn, bridgeBtn, rampFiatBtn];
+      const elements = [loginBtn, rampBtn, mintBtn, rampFiatBtn];
       elements.forEach(el => { if (el) el.disabled = true; });
       const status = document.getElementById("rampStatus");
       if (status) status.textContent = "⏳ YET is closed. Try again Mon/Wed/Fri 09–11 AM PST.";
     }
   }
+
+  // ✅ Live Clock (PST)
+  function updateClock() {
+    const now = new Date();
+    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+    const pst = new Date(utc - 7 * 3600000);
+
+    let hours = pst.getHours();
+    const minutes = String(pst.getMinutes()).padStart(2, '0');
+    const seconds = String(pst.getSeconds()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+
+    const timeString = `${hours}:${minutes}:${seconds} ${ampm} PST`;
+    const dateString = pst.toDateString();
+
+    const clock = document.getElementById("liveClock");
+    const date = document.getElementById("liveDate");
+    if (clock) clock.textContent = timeString;
+    if (date) date.textContent = dateString;
+  }
+
+  setInterval(updateClock, 1000);
+  updateClock();
 
   // ✅ Login
   if (loginBtn) {
@@ -79,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(res => res.json())
         .then(data => {
           document.getElementById("mintStatus").textContent = `✅ Sent ${data.usd_amount} YUSD`;
-          document.getElementById("mintTx").textContent = `Swap TX: ${data.swap_tx}`;
+          document.getElementById("mintTx").textContent = `Swap TX: ${data.swap_tx || 'N/A'}`;
           fetchTotalMinted();
         })
         .catch(() => alert("Minting failed."));
@@ -121,73 +145,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ✅ Bridge to NOWPayments
-  if (bridgeBtn) {
-    bridgeBtn.addEventListener("click", function () {
-      const wallet = document.getElementById("bridgeWallet").value;
-      const amount = parseFloat(document.getElementById("bridgeAmount").value);
-
-      if (!wallet || !amount) {
-        alert("Please enter both wallet and amount.");
-        return;
-      }
-
-      fetch("http://127.0.0.1:8000/bridge-to-nowpayments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ to_address: wallet, amount: amount })
-      })
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById("bridgeStatus").textContent = `✅ Bridged to NOWPayments. TX: ${data.tx_hash}`;
-        })
-        .catch(() => {
-          document.getElementById("bridgeStatus").textContent = `❌ Failed to bridge to NOWPayments.`;
-        });
-    });
-  }
-
-  // ✅ Ramp Fiat (Buy ETH with USD via NOWPayments)
-  if (rampFiatBtn) {
-    rampFiatBtn.addEventListener("click", async function () {
-      const toAddress = document.getElementById("walletInput").value;
-      const amountUSD = parseFloat(document.getElementById("usdAmountInput").value);
-      const email = sessionStorage.getItem("email");
-
-      if (!toAddress || isNaN(amountUSD) || !email) {
-        document.getElementById("rampFiatStatus").textContent = "❌ Missing wallet, amount, or login.";
-        return;
-      }
-
-      document.getElementById("rampFiatStatus").textContent = "⏳ Processing payment...";
-
-      try {
-        const response = await fetch("http://localhost:8000/ramp-fiat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            to_address: toAddress,
-            usd_amount: amountUSD,
-            email: email
-          })
-        });
-
-        const result = await response.json();
-
-        if (result.invoice_url) {
-          document.getElementById("rampFiatStatus").textContent = "✅ Payment link created!";
-          window.open(result.invoice_url, "_blank");
-        } else {
-          document.getElementById("rampFiatStatus").textContent =
-            "❌ Failed: " + (result.detail || "Unknown error");
-        }
-      } catch (error) {
-        document.getElementById("rampFiatStatus").textContent = "❌ Request failed.";
-        console.error(error);
-      }
-    });
-  }
-
   // ✅ BitPay Invoice
   if (bitpayBtn) {
     bitpayBtn.addEventListener("click", () => {
@@ -212,6 +169,46 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(() => {
           document.getElementById("bitpayStatus").textContent = `❌ Failed to send invoice`;
         });
+    });
+  }
+
+  // ✅ Buy ETH with USD (Changelly Integration)
+  if (rampFiatBtn) {
+    rampFiatBtn.addEventListener("click", async function () {
+      const toAddress = document.getElementById("walletInput").value;
+      const amountUSD = parseFloat(document.getElementById("usdAmountInput").value);
+      const email = sessionStorage.getItem("email");
+
+      if (!toAddress || isNaN(amountUSD) || !email) {
+        document.getElementById("rampFiatStatus").textContent = "❌ Missing wallet, amount, or login.";
+        return;
+      }
+
+      document.getElementById("rampFiatStatus").textContent = "⏳ Purchasing ETH...";
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/send-stablecoin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            to_address: toAddress,
+            usd_amount: amountUSD,
+            email: email
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.transaction_id) {
+          document.getElementById("rampFiatStatus").textContent = `✅ ETH Purchase Started! TX ID: ${result.transaction_id}`;
+        } else {
+          document.getElementById("rampFiatStatus").textContent =
+            "❌ Failed: " + (result.detail || "Unknown error");
+        }
+      } catch (error) {
+        document.getElementById("rampFiatStatus").textContent = "❌ Request failed.";
+        console.error(error);
+      }
     });
   }
 
@@ -240,6 +237,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // 🕒 Optional lock window
+  // 🕒 Lock window if outside of YET hours
   // blockActionsIfClosed();
 });
