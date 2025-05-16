@@ -97,11 +97,11 @@ document.addEventListener("DOMContentLoaded", function () {
       })
         .then(res => res.json())
         .then(data => {
-          document.getElementById("purchaseStatus").textContent = `✅ Sent ${data.usd_amount} YUSD`;
-          document.getElementById("purchaseTx").textContent = `Swap TX: ${data.swap_tx || 'N/A'}`;
+          document.getElementById("purchaseStatus").textContent = `✅ Sent $${data.amount_usd} in ETH`;
+          document.getElementById("purchaseTx").textContent = `Transaction ID: ${data.transaction_id || 'N/A'}`;
           fetchTotalMinted();
         })
-        .catch(() => alert("Eth purchase failed."));
+        .catch(() => alert("ETH purchase failed."));
     });
   }
 
@@ -200,11 +200,11 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch("http://127.0.0.1:8000/get-total-minted")
       .then(res => res.json())
       .then(data => {
-        document.getElementById("totalMinted").textContent = `$${data.total.toFixed(2)}`;
+        const el = document.getElementById("totalMinted");
+        if (el) el.textContent = `$${data.total.toFixed(2)}`;
       });
   }
 
-   // ✅ Ramp Log Viewer
   function renderRampLog() {
     fetch("http://127.0.0.1:8000/get-ramp-log")
       .then(res => res.json())
@@ -221,6 +221,5 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // 🕒 Lock window if outside of YET hours
-  // blockActionsIfClosed();  // << leave this as-is like you said
+  // blockActionsIfClosed();  // leave this off unless re-enabled later
 });
-
