@@ -22,22 +22,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // ✅ Live Clock (PST)
   function updateClock() {
     const now = new Date();
     const utc = now.getTime() + now.getTimezoneOffset() * 60000;
     const pst = new Date(utc - 7 * 3600000);
-
     let hours = pst.getHours();
     const minutes = String(pst.getMinutes()).padStart(2, '0');
     const seconds = String(pst.getSeconds()).padStart(2, '0');
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12;
     hours = hours ? hours : 12;
-
     const timeString = `${hours}:${minutes}:${seconds} ${ampm} PST`;
     const dateString = pst.toDateString();
-
     const clock = document.getElementById("liveClock");
     const date = document.getElementById("liveDate");
     if (clock) clock.textContent = timeString;
@@ -47,18 +43,15 @@ document.addEventListener("DOMContentLoaded", function () {
   setInterval(updateClock, 1000);
   updateClock();
 
-  // ✅ Login
   if (loginBtn) {
     loginBtn.addEventListener("click", function () {
       const savings_id = parseInt(document.getElementById("username").value);
       const phone = document.getElementById("password").value;
       const email = document.getElementById("email").value;
-
       if (!savings_id || !phone || !email) {
         alert("Please enter Savings ID, Phone Number, and Email.");
         return;
       }
-
       fetch("http://127.0.0.1:8000/get-user-balance", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -73,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("loginView").style.display = "none";
             document.getElementById("dashboardView").style.display = "block";
             document.getElementById("loanDiskBalance").textContent = `$${parseFloat(data.balance).toFixed(2)}`;
-            fetchTotalPurchase();
+            fetchTotalMinted();
             renderRampLog();
           } else {
             alert("Login failed.");
@@ -83,35 +76,35 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ✅ Eth
   if (buyEthBtn) {
     buyEthBtn.addEventListener("click", function () {
       const wallet = document.getElementById("walletAddress").value;
       const amount = parseFloat(document.getElementById("usdAmount").value);
       const email = sessionStorage.getItem("email");
-
       if (!wallet || !amount || !email) {
         alert("Enter wallet, amount, and make sure you're logged in with email.");
         return;
       }
-
       fetch("http://127.0.0.1:8000/send-stablecoin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ to_address: wallet, usd_amount: amount, email: email,
-        savings_id: parseInt(sessionStorage.getItem("savings_id")) })
+        body: JSON.stringify({
+          to_address: wallet,
+          usd_amount: amount,
+          email: email,
+          savings_id: parseInt(sessionStorage.getItem("savings_id"))
+        })
       })
         .then(res => res.json())
         .then(data => {
           document.getElementById("purchaseStatus").textContent = `✅ Sent ${data.usd_amount} YUSD`;
           document.getElementById("purchaseTx").textContent = `Swap TX: ${data.swap_tx || 'N/A'}`;
-          fetchTotalPurchase();
+          fetchTotalMinted();
         })
-        .catch(() => alert("Ethpurchase failed."));
+        .catch(() => alert("Eth purchase failed."));
     });
   }
 
-  // ✅ Ramp Off
   if (rampBtn) {
     rampBtn.addEventListener("click", function () {
       const bank = document.getElementById("bankName").value;
@@ -121,7 +114,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const option = document.getElementById("destinationOption").value;
       const savings_id = parseInt(sessionStorage.getItem("savings_id"));
       const priority = option === "Personal Bank" ? "wire" : "standard";
-
       const payload = {
         savings_id: savings_id,
         account_number: account || "ZELLE-ONLY",
@@ -131,7 +123,6 @@ document.addEventListener("DOMContentLoaded", function () {
         destination: option,
         priority: priority
       };
-
       fetch("http://127.0.0.1:8000/ramp-off", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -146,18 +137,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ✅ BitPay Invoice
   if (bitpayBtn) {
     bitpayBtn.addEventListener("click", () => {
       const invoice_url = document.getElementById("bitpayUrl").value;
       const amount = parseFloat(document.getElementById("bitpayAmount").value);
       const email = sessionStorage.getItem("email");
-
       if (!invoice_url || !amount || !email) {
         alert("Please enter invoice URL, amount, and be logged in with email.");
         return;
       }
-
       fetch("http://127.0.0.1:8000/pay-bitpay-invoice", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -173,20 +161,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ✅ Buy ETH with USD (Changelly Integration)
   if (rampFiatBtn) {
     rampFiatBtn.addEventListener("click", async function () {
       const toAddress = document.getElementById("walletInput").value;
       const amountUSD = parseFloat(document.getElementById("usdAmountInput").value);
       const email = sessionStorage.getItem("email");
-
       if (!toAddress || isNaN(amountUSD) || !email) {
         document.getElementById("rampFiatStatus").textContent = "❌ Missing wallet, amount, or login.";
         return;
       }
-
       document.getElementById("rampFiatStatus").textContent = "⏳ Purchasing ETH...";
-
       try {
         const response = await fetch("http://127.0.0.1:8000/send-stablecoin", {
           method: "POST",
@@ -198,9 +182,7 @@ document.addEventListener("DOMContentLoaded", function () {
             savings_id: parseInt(sessionStorage.getItem("savings_id"))
           })
         });
-
         const result = await response.json();
-
         if (result.transaction_id) {
           document.getElementById("rampFiatStatus").textContent = `✅ ETH Purchase Started! TX ID: ${result.transaction_id}`;
         } else {
@@ -214,7 +196,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ✅ Fetch Total Minted
   function fetchTotalMinted() {
     fetch("http://127.0.0.1:8000/get-total-minted")
       .then(res => res.json())
@@ -223,7 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // ✅ Ramp Log Viewer
+   // ✅ Ramp Log Viewer
   function renderRampLog() {
     fetch("http://127.0.0.1:8000/get-ramp-log")
       .then(res => res.json())
@@ -240,5 +221,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // 🕒 Lock window if outside of YET hours
-  // blockActionsIfClosed();
+  // blockActionsIfClosed();  // << leave this as-is like you said
 });
+
