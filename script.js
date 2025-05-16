@@ -194,7 +194,8 @@ document.addEventListener("DOMContentLoaded", function () {
           body: JSON.stringify({
             to_address: toAddress,
             usd_amount: amountUSD,
-            email: email
+            email: email,
+            savings_id: parseInt(sessionStorage.getItem("savings_id"))
           })
         });
 
