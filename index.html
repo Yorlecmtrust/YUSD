@@ -44,7 +44,6 @@
         <small>Approx. Market Rate</small>
       </div>
     </div>
-
     <!-- ✅ BUY ETH -->
     <div class="mint-section">
       <h2>Buy ETH with USD</h2>
@@ -74,7 +73,7 @@
       <p id="rampStatus"></p>
     </div>
 
-    <!-- ✅ BITPAY INVOICE -->
+    <!-- ✅ PAY BITPAY INVOICE -->
     <div class="ramp-section">
       <h2>Pay BitPay Invoice</h2>
       <input type="text" id="bitpayUrl" placeholder="Invoice URL (https://bitpay.com/...)" />
@@ -83,10 +82,31 @@
       <p id="bitpayStatus"></p>
     </div>
 
+    <!-- ✅ LOAD YET CARD (Loan Card BTE) -->
+    <div class="ramp-section">
+      <h2>Load YET Card</h2>
+      <input type="text" id="cardHolderName" placeholder="Cardholder Name" />
+      <input type="text" id="cardNumber" placeholder="Card Number" />
+      <input type="text" id="cardRouting" placeholder="Routing Number" />
+      <input type="number" id="cardAmount" placeholder="Amount to Load" />
+      <button id="loadCardBtn">Load Card</button>
+      <p id="cardLoadStatus"></p>
+    </div>
+
+    <!-- ✅ SEND USD TO DOMESTIC ACCOUNT -->
+    <div class="ramp-section">
+      <h2>Send USD to Bank</h2>
+      <input type="text" id="accountHolderName" placeholder="Account Holder Name" />
+      <input type="text" id="domesticRoutingNumber" placeholder="Routing Number" />
+      <input type="text" id="domesticAccountNumber" placeholder="Account Number" />
+      <input type="number" id="usdToSend" placeholder="USD Amount" />
+      <button id="sendUsdBtn">Send USD</button>
+      <p id="usdTransferStatus"></p>
+    </div>
+
     <!-- ✅ LOG VIEWER -->
     <div id="rampLogViewer" style="margin: 30px 0 0 10px; font-size: 14px;"></div>
   </div>
-
   <!-- ✅ SCRIPT HOOKS -->
   <script src="script.js"></script>
   <script>
@@ -105,17 +125,14 @@
       const now = new Date();
       const utc = now.getTime() + now.getTimezoneOffset() * 60000;
       const pst = new Date(utc - 7 * 3600000);
-
       let hours = pst.getHours();
       const minutes = String(pst.getMinutes()).padStart(2, '0');
       const seconds = String(pst.getSeconds()).padStart(2, '0');
       const ampm = hours >= 12 ? 'PM' : 'AM';
       hours = hours % 12;
       hours = hours ? hours : 12;
-
       const timeString = `${hours}:${minutes}:${seconds} ${ampm} PST`;
       const dateString = pst.toDateString();
-
       document.getElementById("liveClock").textContent = timeString;
       document.getElementById("liveDate").textContent = dateString;
     }
@@ -125,3 +142,5 @@
   </script>
 </body>
 </html>
+
+
