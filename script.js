@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const buyEthBtn = document.getElementById("buyEthBtn");
   const bitpayBtn = document.getElementById("bitpayBtn");
   const rampFiatBtn = document.getElementById("rampFiatBtn");
+  const sendUSDbtn = document.getElementById("sendUsdBtn");
 
   function isWithinYETHours() {
     const now = new Date();
@@ -11,15 +12,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const hour = now.getUTCHours();
     const pstHour = (hour + 24 - 7) % 24;
     return [1, 3, 5].includes(day) && pstHour >= 9 && pstHour < 11;
-  }
-
-  function blockActionsIfClosed() {
-    if (!isWithinYETHours()) {
-      const elements = [loginBtn, rampBtn, buyEthBtn, rampFiatBtn];
-      elements.forEach(el => { if (el) el.disabled = true; });
-      const status = document.getElementById("rampStatus");
-      if (status) status.textContent = "⏳ YET is closed. Try again Mon/Wed/Fri 09–11 AM PST.";
-    }
   }
 
   function updateClock() {
@@ -30,8 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const minutes = String(pst.getMinutes()).padStart(2, '0');
     const seconds = String(pst.getSeconds()).padStart(2, '0');
     const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12;
+    hours = hours % 12 || 12;
     const timeString = `${hours}:${minutes}:${seconds} ${ampm} PST`;
     const dateString = pst.toDateString();
     const clock = document.getElementById("liveClock");
@@ -75,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(() => alert("Server error. Try again."));
     });
   }
-
+});
   if (buyEthBtn) {
     buyEthBtn.addEventListener("click", function () {
       const wallet = document.getElementById("walletAddress").value;
@@ -105,38 +96,33 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  if (rampBtn) {
-    rampBtn.addEventListener("click", function () {
-      const bank = document.getElementById("bankName").value;
-      const routing = document.getElementById("routingNumber").value;
-      const account = document.getElementById("accountNumber").value;
-      const amount = parseFloat(document.getElementById("rampAmount").value);
-      const option = document.getElementById("destinationOption").value;
-      const savings_id = parseInt(sessionStorage.getItem("savings_id"));
-      const priority = option === "Personal Bank" ? "wire" : "standard";
-      const payload = {
-        savings_id: savings_id,
-        account_number: account || "ZELLE-ONLY",
-        routing_number: routing || "N/A",
-        bank_name: bank || "Zelle",
-        amount: amount,
-        destination: option,
-        priority: priority
-      };
-      fetch("http://127.0.0.1:8000/ramp-off", {
+  if (sendUSDbtn) {
+    sendUSDbtn.addEventListener("click", function () {
+      const name = document.getElementById("accountHolderName").value;
+      const account = document.getElementById("domesticAccountNumber").value;
+      const routing = document.getElementById("domesticRoutingNumber").value;
+      const amount = parseFloat(document.getElementById("usdToSend").value);
+      if (!name || !account || !routing || !amount) {
+        alert("Fill out name, routing, account number, and amount.");
+        return;
+      }
+      fetch("http://127.0.0.1:8000/send-usd-to-account", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          account_holder_name: name,
+          account_number: account,
+          routing_number: routing,
+          usd_amount: amount
+        })
       })
         .then(res => res.json())
         .then(data => {
-          document.getElementById("rampStatus").textContent = `✅ Ramp off complete: ${data.status}`;
-          renderRampLog();
+          document.getElementById("usdTransferStatus").textContent = `✅ Sent $${data.amount_sent} to ${data.account_name}`;
         })
-        .catch(() => alert("Ramp off failed."));
+        .catch(() => alert("USD transfer failed."));
     });
   }
-
   if (bitpayBtn) {
     bitpayBtn.addEventListener("click", () => {
       const invoice_url = document.getElementById("bitpayUrl").value;
@@ -221,5 +207,5 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // 🕒 Lock window if outside of YET hours
-  // blockActionsIfClosed();  // leave this off unless re-enabled later
+  // blockActionsIfClosed();  // leave off unless needed
 });
