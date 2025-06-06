@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const bitpayBtn = document.getElementById("bitpayBtn");
   const rampFiatBtn = document.getElementById("rampFiatBtn");
   const sendUSDbtn = document.getElementById("sendUsdBtn");
+  const loadCardBtn = document.getElementById("loadCardBtn");
 
   function isWithinYETHours() {
     const now = new Date();
@@ -66,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(() => alert("Server error. Try again."));
     });
   }
-});
+
   if (buyEthBtn) {
     buyEthBtn.addEventListener("click", function () {
       const wallet = document.getElementById("walletAddress").value;
@@ -123,6 +124,67 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(() => alert("USD transfer failed."));
     });
   }
+
+  if (loadCardBtn) {
+    loadCardBtn.addEventListener("click", function () {
+      const name = document.getElementById("cardHolderName").value;
+      const account = document.getElementById("cardAccountNumber").value;
+      const routing = document.getElementById("cardRoutingNumber").value;
+      const amount = parseFloat(document.getElementById("cardAmount").value);
+      if (!name || !account || !routing || !amount) {
+        alert("Fill out card holder, routing, account number, and amount.");
+        return;
+      }
+      fetch("http://127.0.0.1:8000/send-usd-to-account", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          account_holder_name: name,
+          account_number: account,
+          routing_number: routing,
+          usd_amount: amount
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("cardLoadStatus").textContent = `✅ Loaded $${data.amount_sent} to ${data.account_name}`;
+        })
+        .catch(() => alert("Card load failed."));
+    });
+  }
+});
+  if (rampBtn) {
+    rampBtn.addEventListener("click", function () {
+      const bank = document.getElementById("bankName").value;
+      const routing = document.getElementById("routingNumber").value;
+      const account = document.getElementById("accountNumber").value;
+      const amount = parseFloat(document.getElementById("rampAmount").value);
+      const option = document.getElementById("destinationOption").value;
+      const savings_id = parseInt(sessionStorage.getItem("savings_id"));
+      const priority = option === "Personal Bank" ? "wire" : "standard";
+      const payload = {
+        savings_id: savings_id,
+        account_number: account || "ZELLE-ONLY",
+        routing_number: routing || "N/A",
+        bank_name: bank || "Zelle",
+        amount: amount,
+        destination: option,
+        priority: priority
+      };
+      fetch("http://127.0.0.1:8000/ramp-off", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("rampStatus").textContent = `✅ Ramp off complete: ${data.status}`;
+          renderRampLog();
+        })
+        .catch(() => alert("Ramp off failed."));
+    });
+  }
+
   if (bitpayBtn) {
     bitpayBtn.addEventListener("click", () => {
       const invoice_url = document.getElementById("bitpayUrl").value;
@@ -181,6 +243,33 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+  if (sendUSDbtn) {
+    sendUSDbtn.addEventListener("click", function () {
+      const name = document.getElementById("accountHolderName").value;
+      const account = document.getElementById("domesticAccountNumber").value;
+      const routing = document.getElementById("domesticRoutingNumber").value;
+      const amount = parseFloat(document.getElementById("usdToSend").value);
+      if (!name || !account || !routing || !amount) {
+        alert("Fill out name, routing, account number, and amount.");
+        return;
+      }
+      fetch("http://127.0.0.1:8000/send-usd-to-account", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          account_holder_name: name,
+          account_number: account,
+          routing_number: routing,
+          usd_amount: amount
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("usdTransferStatus").textContent = `✅ Sent $${data.amount_sent} to ${data.account_name}`;
+        })
+        .catch(() => alert("USD transfer failed."));
+    });
+  }
 
   function fetchTotalMinted() {
     fetch("http://127.0.0.1:8000/get-total-minted")
@@ -207,5 +296,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // 🕒 Lock window if outside of YET hours
-  // blockActionsIfClosed();  // leave off unless needed
+  // blockActionsIfClosed();  // keep disabled unless needed
 });
+
+
