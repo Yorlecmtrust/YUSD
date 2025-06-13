@@ -297,4 +297,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 🕒 Lock window if outside of YET hours
   // blockActionsIfClosed();  // keep disabled unless needed
-}
+
