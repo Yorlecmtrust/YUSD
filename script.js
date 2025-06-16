@@ -138,12 +138,14 @@ document.addEventListener("DOMContentLoaded", function () {
       fetch("http://127.0.0.1:8000/send-usd-to-account", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          account_holder_name: name,
-          account_number: account,
-          routing_number: routing,
-          usd_amount: amount
-        })
+       body: JSON.stringify({
+         account_id: sessionStorage.getItem("savings_id"),  // ✅ critical fix
+         account_holder_name: name,
+         account_number: account,
+         routing_number: routing,
+         usd_amount: amount
+      })
+
       })
         .then(res => res.json())
         .then(data => {
