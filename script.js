@@ -210,6 +210,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
   }
+  const rampFiatBtn = document.getElementById("rampFiatBtn");
 
   if (rampFiatBtn) {
     rampFiatBtn.addEventListener("click", async function () {
