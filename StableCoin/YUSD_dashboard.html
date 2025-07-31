@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YUSD Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Bebas Neue', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 {
+      font-size: 3em;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .box {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .flex {
+      display: flex;
+      justify-content: space-between;
+    }
+    button {
+      background-color: #00c896;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #00a67a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>YUSD Dashboard</h1>
+
+    <div class="box" id="walletInfo">
+      <h2>Wallet Info</h2>
+      <p><strong>Address:</strong> <span id="walletAddress"></span></p>
+      <p><strong>ETH Balance:</strong> <span id="ethBalance">...</span></p>
+      <p><strong>YUSD Balance:</strong> <span id="yusdBalance">...</span></p>
+    </div>
+
+    <div class="box">
+      <h2>Live Price</h2>
+      <p><strong>YUSD Price (USD):</strong> <span id="price">$1.00</span></p>
+      <button onclick="addTokenToMetaMask()">Add YUSD to MetaMask</button>
+    </div>
+
+    <div class="box">
+      <h2>Mint YUSD</h2>
+      <input type="number" id="mintAmount" placeholder="USD Amount" />
+      <button onclick="mintYUSD()">Mint</button>
+    </div>
+
+  </div>
+
+  <script>
+    const walletAddress = "0x96EBd09A5Dc786618FB5AE5b6B831894Ed81f120";
+    document.getElementById('walletAddress').innerText = walletAddress;
+
+    async function fetchPrice() {
+      const res = await fetch("http://localhost:8000/get-price");
+      const data = await res.json();
+      document.getElementById("price").innerText = `$${data.price_usd.toFixed(2)}`;
+    }
+
+    async function fetchBalances() {
+      const ethRes = await fetch(`https://api.etherscan.io/api?module=account&action=balance&address=${walletAddress}&tag=latest&apikey=YourAPIKey`);
+      const ethData = await ethRes.json();
+      const ethBalance = parseFloat(ethData.result) / 1e18;
+      document.getElementById("ethBalance").innerText = `${ethBalance.toFixed(4)} ETH`;
+
+      const yusdRes = await fetch(`http://localhost:8000/stablecoin-balance/${walletAddress}`);
+      const yusdData = await yusdRes.json();
+      document.getElementById("yusdBalance").innerText = `${yusdData.balance.toFixed(2)} YUSD`;
+    }
+
+    async function mintYUSD() {
+      const amount = parseFloat(document.getElementById("mintAmount").value);
+      if (!amount) return alert("Enter a valid amount");
+
+      const res = await fetch("http://localhost:8000/send-stablecoin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to_address: walletAddress, usd_amount: amount })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert(`✅ Minted ${amount} YUSD to ${walletAddress}`);
+        fetchBalances();
+      } else {
+        alert(`❌ Error: ${data.detail}`);
+      }
+    }
+
+    async function addTokenToMetaMask() {
+      try {
+        const wasAdded = await window.ethereum.request({
+          method: 'wallet_watchAsset',
+          params: {
+            type: 'ERC20',
+            options: {
+              address: '0x67B823349aBBaaD0CE8f6C9303ffE07C955e5F55',
+              symbol: 'YUSD',
+              decimals: 18,
+              image: 'https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YUSD/main/logo.png'
+            }
+          }
+        });
+        if (wasAdded) {
+          console.log('YUSD added to MetaMask');
+        }
+      } catch (error) {
+        console.error('MetaMask addToken error:', error);
+      }
+    }
+
+    fetchPrice();
+    fetchBalances();
+  </script>
+</body>
+</html>
