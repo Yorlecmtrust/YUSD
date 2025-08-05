@@ -1,0 +1,240 @@
+/* ===== General Reset ===== */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #0d1117;
+  color: #ffffff;
+}
+
+/* ===== Login Page ===== */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-box {
+  text-align: center;
+}
+
+.logo {
+  font-size: 64px;
+  margin: 0;
+  color: #d1d5db;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #d1d5db;
+  letter-spacing: 1px;
+}
+
+.subtitle-small {
+  font-size: 14px;
+  color: #a0a0a0;
+  line-height: 1.6;
+}
+
+/* ===== Inputs & Buttons ===== */
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="email"],
+select {
+  width: 280px;
+  padding: 12px;
+  margin: 10px 0;
+  background-color: #12151c;
+  color: #ffffff;
+  border: 1px solid #333;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+input::placeholder,
+select::placeholder {
+  color: #888;
+}
+
+button {
+  width: 280px;
+  padding: 12px;
+  background-color: #17823b;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  background-color: #126831;
+}
+
+/* ===== Dashboard Clock ===== */
+#clockDisplay,
+#clock {
+  text-align: center;
+  font-size: 14px;
+  color: #c9d1d9;
+  margin-top: 10px;
+}
+
+/* ===== Dashboard Cards ===== */
+.dashboard-container .cards {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+
+.card {
+  background-color: #1f2937;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px;
+  width: 250px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(255,255,255,0.05);
+}
+
+.card h3 {
+  margin-bottom: 10px;
+}
+
+.card p {
+  font-size: 24px;
+  margin: 5px 0;
+}
+
+.card small {
+  color: #a0a0a0;
+}
+
+/* ===== Mint, Ramp, Invoice Sections ===== */
+.mint-section,
+.ramp-section {
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #161b22;
+  border-radius: 10px;
+  max-width: 600px;
+}
+
+.mint-section input,
+.ramp-section input,
+.ramp-section select {
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+  background-color: #0d1117;
+  color: white;
+  border: 1px solid #333;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.mint-section button,
+.ramp-section button {
+  width: 100%;
+  padding: 12px;
+  background-color: #17823b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.mint-section button:hover,
+.ramp-section button:hover {
+  background-color: #126831;
+}
+
+/* ===== BitPay Invoice Status Text ===== */
+#bitpayStatus {
+  color: #a0f0c3;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+/* ===== Zelle Info Text ===== */
+.ramp-section small {
+  color: #999;
+  font-size: 13px;
+  display: block;
+  margin-top: -10px;
+  margin-bottom: 15px;
+}
+
+/* ===== Ramp Log Viewer ===== */
+#rampLogViewer {
+  margin: 30px auto;
+  padding: 15px;
+  max-width: 640px;
+  font-size: 14px;
+  background-color: #10151c;
+  border-radius: 8px;
+  border: 1px solid #333;
+  color: #c9d1d9;
+}
+
+#rampLogViewer ul {
+  padding-left: 20px;
+}
+
+#rampLogViewer li {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+/* ===== Bridge to NOWPayments ===== */
+.bridge-section {
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #20232a;
+  border-radius: 10px;
+  max-width: 600px;
+}
+
+.bridge-section input {
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+  background-color: #0d1117;
+  color: white;
+  border: 1px solid #333;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.bridge-section button {
+  width: 100%;
+  padding: 12px;
+  background-color: #1e8e3e;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.bridge-section button:hover {
+  background-color: #166c30;
+}
+
+#bridgeStatus {
+  color: #a0f0c3;
+  font-size: 14px;
+  margin-top: 10px;
+}
