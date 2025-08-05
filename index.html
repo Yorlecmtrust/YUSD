@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YT Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="login-container" id="loginView">
+    <div class="login-box">
+      <h1 class="logo">YT</h1>
+      <div class="subtitle">YORLECM EXPRESS TRUST</div>
+      <div class="subtitle-small">DECENTRALIZED<br/>FINANCIAL<br/>INSTITUTION</div>
+
+      <input type="text" id="username" placeholder="Savings ID" />
+      <input type="text" id="password" placeholder="Phone Number" />
+      <input type="email" id="email" placeholder="Email for Receipts & Invoices" />
+      <button id="loginBtn">LOGIN</button>
+      <div class="subtitle-small" style="margin-top: 20px;">YET Hours: Mon/Wed/Fri 09:00–11:00 PST</div>
+      <div id="liveDate"></div>
+      <div id="liveClock"></div>
+    </div>
+  </div>
+
+  <div id="dashboardView" style="display:none;">
+    <div class="dashboard-container">
+      <div class="cards">
+        <div class="card">
+          <h3>Balance</h3>
+          <p id="loanDiskBalance">$0.00</p>
+          <small>Current Ledger Balance</small>
+        </div>
+        <div class="card">
+          <h3>Total Minted</h3>
+          <p id="totalMinted">$0.00</p>
+          <small>Stablecoin Supply</small>
+        </div>
+      </div>
+
+      <div class="mint-section">
+        <h3>Send ETH to Wallet</h3>
+        <input type="text" id="walletAddress" placeholder="Enter Wallet Address" />
+        <input type="number" id="usdAmount" placeholder="Amount in USD" />
+        <button id="buyEthBtn">Send ETH</button>
+        <p id="purchaseStatus"></p>
+        <p id="purchaseTx"></p>
+      </div>
+
+      <div class="ramp-section">
+        <h3>Ramp Off to Bank / Zelle</h3>
+        <input type="text" id="bankName" placeholder="Bank Name (or Zelle)" />
+        <input type="text" id="routingNumber" placeholder="Routing Number (Optional)" />
+        <input type="text" id="accountNumber" placeholder="Account Number (or ZELLE-ONLY)" />
+        <input type="number" id="rampAmount" placeholder="USD Amount" />
+        <select id="destinationOption">
+          <option value="Personal Bank">Personal Bank (ACH/Wire)</option>
+          <option value="Zelle">Zelle</option>
+        </select>
+        <button id="rampBtn">Ramp Off</button>
+        <p id="rampStatus"></p>
+        <small>For Zelle, just enter Zelle email or phone number</small>
+      </div>
+
+      <div class="mint-section">
+        <h3>Send USD to Bank</h3>
+        <input type="text" id="accountHolderName" placeholder="Account Holder Name" />
+        <input type="text" id="domesticRoutingNumber" placeholder="Routing Number" />
+        <input type="text" id="domesticAccountNumber" placeholder="Account Number" />
+        <input type="number" id="usdToSend" placeholder="USD Amount" />
+        <button id="sendUsdBtn">Send USD</button>
+        <p id="usdTransferStatus"></p>
+      </div>
+
+      <div class="mint-section">
+        <h3>Load Card (YET MasterCard)</h3>
+        <input type="text" id="cardHolderName" placeholder="Cardholder Name" />
+        <input type="text" id="cardRoutingNumber" placeholder="Routing Number" />
+        <input type="text" id="cardAccountNumber" placeholder="Card Account Number" />
+        <input type="number" id="cardAmount" placeholder="Amount in USD" />
+        <button id="loadCardBtn">Load Card</button>
+        <p id="cardLoadStatus"></p>
+      </div>
+
+      <div class="mint-section">
+        <h3>Pay BitPay Invoice</h3>
+        <input type="text" id="bitpayUrl" placeholder="BitPay Invoice URL" />
+        <input type="number" id="bitpayAmount" placeholder="USD Amount" />
+        <button id="bitpayBtn">Send Invoice</button>
+        <p id="bitpayStatus"></p>
+      </div>
+
+      <div class="bridge-section">
+        <h3>Purchase ETH (Bridge Mode)</h3>
+        <input type="text" id="walletInput" placeholder="Wallet Address" />
+        <input type="number" id="usdAmountInput" placeholder="USD Amount" />
+        <button id="rampFiatBtn">Bridge Purchase</button>
+        <p id="rampFiatStatus"></p>
+      </div>
+
+      <div id="rampLogViewer"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
